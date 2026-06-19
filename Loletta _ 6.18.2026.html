@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yogurtland — Marketing Campaign Portal · Loletta Dao</title>
+<style>
+  :root {
+    --pink: #D4006A;
+    --pink-light: #F5E6EF;
+    --pink-mid: #E8649A;
+    --teal: #00A79D;
+    --teal-light: #E0F5F4;
+    --purple: #7C3AED;
+    --purple-light: #F3EEFE;
+    --gray-50: #F9FAFB;
+    --gray-100: #F3F4F6;
+    --gray-200: #E5E7EB;
+    --gray-300: #D1D5DB;
+    --gray-400: #9CA3AF;
+    --gray-500: #6B7280;
+    --gray-600: #4B5563;
+    --gray-700: #374151;
+    --gray-800: #1F2937;
+    --gray-900: #111827;
+    --red: #DC2626;
+    --red-light: #FEF2F2;
+    --amber: #D97706;
+    --amber-light: #FFFBEB;
+    --green: #059669;
+    --green-light: #ECFDF5;
+    --blue: #2563EB;
+    --blue-light: #EFF6FF;
+    --sidebar-w: 248px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--gray-50); color: var(--gray-800); display: flex; height: 100vh; overflow: hidden; }
+
+  /* SIDEBAR */
+  .sidebar { width: var(--sidebar-w); background: var(--gray-900); display: flex; flex-direction: column; flex-shrink: 0; overflow-y: auto; }
+  .sidebar-logo { padding: 18px 16px 14px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .sidebar-logo .brand { color: #fff; font-size: 13px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; opacity: 0.55; }
+  .sidebar-logo .title { color: #fff; font-size: 15.5px; font-weight: 700; margin-top: 2px; }
+  .sidebar-logo .subtitle { color: rgba(255,255,255,0.45); font-size: 11px; margin-top: 1px; }
+  .nav-section { padding: 10px 0 4px; }
+  .nav-label { color: rgba(255,255,255,0.32); font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 0 16px 6px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 8px 16px; color: rgba(255,255,255,0.65); font-size: 13.5px; cursor: pointer; transition: all 0.15s; border-left: 3px solid transparent; }
+  .nav-item:hover { background: rgba(255,255,255,0.06); color: #fff; }
+  .nav-item.active { background: rgba(212,0,106,0.22); color: #fff; border-left-color: var(--pink); }
+  .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .nav-badge { margin-left: auto; background: var(--pink); color: #fff; font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 10px; }
+  .nav-badge.gray { background: rgba(255,255,255,0.15); }
+
+  .sidebar-user { margin-top: auto; padding: 12px 14px; border-top: 1px solid rgba(255,255,255,0.1); }
+  .role-switch { background: rgba(255,255,255,0.06); border-radius: 8px; padding: 4px; display: flex; gap: 4px; }
+  .role-btn { flex: 1; text-align: center; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.5); padding: 6px 4px; border-radius: 6px; cursor: pointer; transition: all 0.15s; }
+  .role-btn.active { background: var(--pink); color: #fff; }
+  .role-meta { font-size: 10.5px; color: rgba(255,255,255,0.4); margin-top: 8px; line-height: 1.4; padding: 0 4px; }
+
+  /* MAIN */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  .topbar { background: #fff; border-bottom: 1px solid var(--gray-200); padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+  .topbar-title { font-size: 16px; font-weight: 700; color: var(--gray-800); }
+  .topbar-sub { font-size: 12px; color: var(--gray-400); font-weight: 500; margin-left: 10px; }
+  .topbar-actions { display: flex; align-items: center; gap: 10px; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s; }
+  .btn-primary { background: var(--pink); color: #fff; }
+  .btn-primary:hover { background: #B0005A; }
+  .btn-outline { background: #fff; color: var(--gray-700); border: 1px solid var(--gray-300); }
+  .btn-outline:hover { background: var(--gray-50); }
+  .btn-teal { background: var(--teal); color: #fff; }
+  .btn-teal:hover { background: #008A82; }
+  .btn-sm { padding: 5px 10px; font-size: 12px; }
+  .btn svg { width: 14px; height: 14px; }
+  .content { flex: 1; overflow-y: auto; padding: 24px; }
+
+  /* VIEWS */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* STATS */
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+  .stat-card { background: #fff; border-radius: 10px; border: 1px solid var(--gray-200); padding: 16px 18px; }
+  .stat-label { font-size: 11.5px; color: var(--gray-500); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+  .stat-value { font-size: 27px; font-weight: 800; margin: 4px 0 2px; }
+  .stat-sub { font-size: 12px; color: var(--gray-500); }
+  .stat-red .stat-value { color: var(--red); }
+  .stat-amber .stat-value { color: var(--amber); }
+  .stat-green .stat-value { color: var(--green); }
+  .stat-teal .stat-value { color: var(--teal); }
+  .stat-pink .stat-value { color: var(--pink); }
+  .stat-purple .stat-value { color: var(--purple); }
+
+  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; margin-top: 4px; }
+  .section-title { font-size: 14px; font-weight: 700; color: var(--gray-700); }
+  .section-title small { font-weight: 500; color: var(--gray-400); font-size: 12px; }
+
+  /* TABLE */
+  .table-wrap { background: #fff; border-radius: 10px; border: 1px solid var(--gray-200); overflow: hidden; margin-bottom: 24px; }
+  table { width: 100%; border-collapse: collapse; }
+  thead th { background: var(--gray-50); padding: 10px 16px; text-align: left; font-size: 11px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1px solid var(--gray-200); }
+  tbody tr { border-bottom: 1px solid var(--gray-100); transition: background 0.1s; }
+  tbody tr.clickable { cursor: pointer; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr.clickable:hover { background: var(--gray-50); }
+  td { padding: 12px 16px; font-size: 13px; vertical-align: middle; }
+  .td-name { font-weight: 600; color: var(--gray-800); }
+  .td-sub { font-size: 11px; color: var(--gray-500); margin-top: 1px; }
+
+  /* BADGES */
+  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+  .badge-red { background: var(--red-light); color: var(--red); }
+  .badge-amber { background: var(--amber-light); color: var(--amber); }
+  .badge-green { background: var(--green-light); color: var(--green); }
+  .badge-blue { background: var(--blue-light); color: var(--blue); }
+  .badge-gray { background: var(--gray-100); color: var(--gray-600); }
+  .badge-pink { background: var(--pink-light); color: var(--pink); }
+  .badge-teal { background: var(--teal-light); color: var(--teal); }
+  .badge-purple { background: var(--purple-light); color: var(--purple); }
+  .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .raci-chip { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 4px; font-size: 10px; font-weight: 800; margin-right: 4px; }
+  .raci-r { background: var(--pink-light); color: var(--pink); }
+  .raci-a { background: var(--teal-light); color: var(--teal); }
+
+  /* PHASE TRACKER */
+  .phase-tracker { display: flex; align-items: flex-start; gap: 0; margin-bottom: 22px; background: #fff; border-radius: 10px; border: 1px solid var(--gray-200); padding: 20px 18px 16px; }
+  .phase-item { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; cursor: pointer; }
+  .phase-item:not(:last-child)::after { content: ''; position: absolute; top: 15px; left: 50%; width: 100%; height: 2px; background: var(--gray-200); z-index: 0; }
+  .phase-item.done:not(:last-child)::after { background: var(--green); }
+  .phase-circle { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; z-index: 1; border: 2px solid var(--gray-300); background: #fff; color: var(--gray-400); transition: all 0.15s; }
+  .phase-item.done .phase-circle { background: var(--green); border-color: var(--green); color: #fff; }
+  .phase-item.active .phase-circle { background: var(--pink); border-color: var(--pink); color: #fff; box-shadow: 0 0 0 4px var(--pink-light); }
+  .phase-label { font-size: 10.5px; text-align: center; margin-top: 7px; color: var(--gray-500); font-weight: 600; max-width: 92px; line-height: 1.3; }
+  .phase-item.active .phase-label { color: var(--pink); }
+  .phase-item.done .phase-label { color: var(--green); }
+  .phase-sub { font-size: 9.5px; color: var(--gray-400); margin-top: 2px; }
+
+  /* DETAIL GRID */
+  .detail-grid { display: grid; grid-template-columns: 1fr 360px; gap: 20px; align-items: start; }
+  .card { background: #fff; border-radius: 10px; border: 1px solid var(--gray-200); margin-bottom: 20px; }
+  .card-header { padding: 13px 18px; border-bottom: 1px solid var(--gray-200); display: flex; align-items: center; justify-content: space-between; }
+  .card-title { font-size: 13px; font-weight: 700; color: var(--gray-700); }
+  .card-body { padding: 18px; }
+  .info-row { display: flex; gap: 8px; margin-bottom: 11px; }
+  .info-row:last-child { margin-bottom: 0; }
+  .info-label { font-size: 11px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.04em; width: 130px; flex-shrink: 0; padding-top: 1px; }
+  .info-value { font-size: 13px; color: var(--gray-700); }
+  .info-value.highlight { font-weight: 700; color: var(--gray-800); }
+  .pill-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pill { background: var(--gray-100); color: var(--gray-700); font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 16px; }
+  .pill.flavor { background: var(--pink-light); color: var(--pink); }
+  .pill.topping { background: var(--teal-light); color: var(--teal); }
+  .pill.gwp { background: var(--purple-light); color: var(--purple); }
+
+  /* TASK ROWS */
+  .task-row { display: flex; align-items: flex-start; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--gray-100); }
+  .task-row:last-child { border-bottom: none; }
+  .task-check { width: 18px; height: 18px; border-radius: 5px; border: 2px solid var(--gray-300); flex-shrink: 0; margin-top: 1px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+  .task-check.done { background: var(--green); border-color: var(--green); }
+  .task-check.done::after { content: '✓'; color: #fff; font-size: 11px; font-weight: 700; }
+  .task-check.blocked { border-color: var(--red); background: var(--red-light); }
+  .task-check.blocked::after { content: '!'; color: var(--red); font-size: 12px; font-weight: 800; }
+  .task-main { flex: 1; min-width: 0; }
+  .task-title { font-size: 13px; color: var(--gray-800); font-weight: 600; line-height: 1.4; }
+  .task-title.done { text-decoration: line-through; color: var(--gray-400); font-weight: 500; }
+  .task-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; align-items: center; }
+  .task-meta-item { font-size: 11px; color: var(--gray-400); display: inline-flex; align-items: center; gap: 3px; }
+
+  /* KANBAN */
+  .kanban { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .kanban-col { background: var(--gray-100); border-radius: 10px; padding: 10px; min-height: 120px; }
+  .kanban-head { font-size: 11.5px; font-weight: 700; color: var(--gray-600); text-transform: uppercase; letter-spacing: 0.04em; padding: 4px 6px 10px; display: flex; justify-content: space-between; }
+  .kanban-card { background: #fff; border-radius: 8px; border: 1px solid var(--gray-200); padding: 10px 12px; margin-bottom: 8px; cursor: pointer; transition: all 0.15s; }
+  .kanban-card:hover { border-color: var(--pink-mid); box-shadow: 0 2px 6px rgba(0,0,0,0.05); }
+  .kanban-card .kc-title { font-size: 12.5px; font-weight: 600; color: var(--gray-800); line-height: 1.35; }
+  .kanban-card .kc-meta { font-size: 10.5px; color: var(--gray-400); margin-top: 6px; display: flex; justify-content: space-between; align-items: center; }
+  .prio-bar { width: 100%; height: 3px; border-radius: 2px; margin-bottom: 8px; }
+  .prio-Critical { background: var(--red); }
+  .prio-High { background: var(--amber); }
+  .prio-Medium { background: var(--blue); }
+  .prio-Low { background: var(--gray-300); }
+
+  /* TIMELINE */
+  .timeline { list-style: none; }
+  .tl-item { display: flex; gap: 12px; padding-bottom: 15px; position: relative; }
+  .tl-item:not(:last-child)::before { content: ''; position: absolute; left: 6px; top: 16px; bottom: 0; width: 2px; background: var(--gray-200); }
+  .tl-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; margin-top: 2px; z-index: 1; }
+  .tl-dot-pink { background: var(--pink); }
+  .tl-dot-green { background: var(--green); }
+  .tl-dot-amber { background: var(--amber); }
+  .tl-dot-blue { background: var(--blue); }
+  .tl-dot-teal { background: var(--teal); }
+  .tl-dot-gray { background: var(--gray-300); }
+  .tl-text { font-size: 12.5px; color: var(--gray-700); line-height: 1.4; }
+  .tl-text b { color: var(--gray-900); }
+  .tl-time { font-size: 11px; color: var(--gray-400); margin-top: 2px; }
+
+  /* APPROVAL */
+  .approval-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--gray-100); }
+  .approval-row:last-child { border-bottom: none; }
+  .approval-icon { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+  .approval-pending { background: var(--amber-light); color: var(--amber); }
+  .approval-done { background: var(--green-light); color: var(--green); }
+  .approval-name { font-size: 12.5px; font-weight: 600; color: var(--gray-700); }
+  .approval-role { font-size: 11px; color: var(--gray-400); margin-top: 1px; }
+
+  /* BUDGET BAR */
+  .budget-bar { height: 8px; background: var(--gray-200); border-radius: 4px; overflow: hidden; margin: 6px 0; }
+  .budget-fill { height: 100%; background: var(--teal); border-radius: 4px; }
+  .budget-fill.over { background: var(--red); }
+  .budget-fill.warn { background: var(--amber); }
+
+  /* PROGRESS BAR */
+  .pbar { height: 6px; background: var(--gray-200); border-radius: 3px; overflow: hidden; width: 90px; }
+  .pbar-fill { height: 100%; background: var(--green); }
+
+  /* NOTICES */
+  .notice-info { background: var(--blue-light); border: 1px solid #BFDBFE; border-radius: 8px; padding: 12px 14px; font-size: 12.5px; color: var(--blue); margin-bottom: 16px; line-height: 1.5; }
+  .notice-warn { background: var(--amber-light); border: 1px solid #FCD34D; border-radius: 8px; padding: 12px 14px; font-size: 12.5px; color: #92400E; margin-bottom: 16px; line-height: 1.5; }
+  .notice-error { background: var(--red-light); border: 1px solid #FECACA; border-radius: 8px; padding: 12px 14px; font-size: 12.5px; color: var(--red); margin-bottom: 16px; line-height: 1.5; }
+  .notice-pink { background: var(--pink-light); border: 1px solid #F3B6D2; border-radius: 8px; padding: 12px 14px; font-size: 12.5px; color: var(--pink); margin-bottom: 16px; line-height: 1.5; }
+
+  /* TABS */
+  .tab-bar { display: flex; gap: 0; border-bottom: 2px solid var(--gray-200); margin-bottom: 20px; flex-wrap: wrap; }
+  .tab { padding: 8px 16px; font-size: 13px; font-weight: 600; color: var(--gray-500); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; }
+  .tab:hover { color: var(--gray-700); }
+  .tab.active { color: var(--pink); border-bottom-color: var(--pink); }
+
+  /* MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 1000; align-items: center; justify-content: center; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: #fff; border-radius: 12px; width: 600px; max-width: 92vw; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.25); }
+  .modal.wide { width: 820px; }
+  .modal-header { padding: 18px 22px; border-bottom: 1px solid var(--gray-200); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: #fff; z-index: 2; }
+  .modal-title { font-size: 15px; font-weight: 700; }
+  .modal-close { cursor: pointer; color: var(--gray-400); font-size: 22px; line-height: 1; background: none; border: none; padding: 2px 6px; }
+  .modal-body { padding: 22px; }
+  .modal-footer { padding: 14px 22px; border-top: 1px solid var(--gray-200); display: flex; justify-content: flex-end; gap: 10px; position: sticky; bottom: 0; background: #fff; }
+  .form-group { margin-bottom: 15px; }
+  .form-label { font-size: 12px; font-weight: 700; color: var(--gray-600); margin-bottom: 5px; display: block; }
+  .form-label span { color: var(--red); }
+  .form-control { width: 100%; padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 13px; color: var(--gray-800); outline: none; transition: border-color 0.15s; font-family: inherit; }
+  .form-control:focus { border-color: var(--pink); box-shadow: 0 0 0 3px rgba(212,0,106,0.1); }
+  textarea.form-control { resize: vertical; min-height: 70px; line-height: 1.5; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  select.form-control { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7280' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
+  .form-hint { font-size: 11px; color: var(--gray-400); margin-top: 4px; }
+
+  /* GUIDE BUILDER */
+  .guide-section { border: 1px solid var(--gray-200); border-radius: 8px; margin-bottom: 12px; overflow: hidden; }
+  .guide-sec-head { background: var(--gray-50); padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+  .guide-sec-title { font-size: 13px; font-weight: 700; color: var(--gray-700); display: flex; align-items: center; gap: 8px; }
+  .guide-sec-body { padding: 14px; font-size: 13px; color: var(--gray-700); line-height: 1.6; display: none; }
+  .guide-sec-body.open { display: block; }
+  .guide-sec-body ul { margin: 6px 0 6px 18px; }
+  .guide-sec-body li { margin-bottom: 4px; }
+  .guide-editarea { width: 100%; min-height: 100px; border: 1px solid var(--gray-300); border-radius: 6px; padding: 10px; font-family: inherit; font-size: 13px; line-height: 1.6; color: var(--gray-700); resize: vertical; }
+
+  /* SEARCH */
+  .search-box { position: relative; margin-bottom: 18px; }
+  .search-box input { width: 100%; padding: 10px 14px 10px 38px; border: 1px solid var(--gray-300); border-radius: 8px; font-size: 13.5px; outline: none; }
+  .search-box input:focus { border-color: var(--pink); box-shadow: 0 0 0 3px rgba(212,0,106,0.1); }
+  .search-box svg { position: absolute; left: 12px; top: 11px; width: 16px; height: 16px; color: var(--gray-400); }
+
+  .kb-card { background: #fff; border: 1px solid var(--gray-200); border-radius: 10px; padding: 16px; margin-bottom: 12px; }
+  .kb-card h4 { font-size: 14px; color: var(--gray-800); margin-bottom: 4px; }
+  .kb-card p { font-size: 12.5px; color: var(--gray-600); line-height: 1.5; }
+  .kb-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+
+  .lesson-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .lesson-block { padding: 12px 14px; border-radius: 8px; font-size: 12.5px; line-height: 1.5; }
+  .lesson-block.good { background: var(--green-light); border: 1px solid #A7F3D0; }
+  .lesson-block.bad { background: var(--red-light); border: 1px solid #FECACA; }
+  .lesson-block h5 { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; }
+  .lesson-block.good h5 { color: var(--green); }
+  .lesson-block.bad h5 { color: var(--red); }
+
+  .empty { text-align: center; padding: 40px; color: var(--gray-400); font-size: 13px; }
+  .breadcrumb { font-size: 12px; color: var(--gray-400); margin-bottom: 14px; cursor: pointer; }
+  .breadcrumb:hover { color: var(--pink); }
+  .gate-banner { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; font-size: 12.5px; }
+  .gate-ok { background: var(--green-light); border: 1px solid #A7F3D0; color: var(--green); }
+  .gate-block { background: var(--amber-light); border: 1px solid #FCD34D; color: #92400E; }
+
+  ::-webkit-scrollbar { width: 7px; height: 7px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 4px; }
+
+  .metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .metric-card { background: var(--gray-50); border-radius: 8px; padding: 14px; text-align: center; }
+  .metric-val { font-size: 22px; font-weight: 800; color: var(--gray-800); }
+  .metric-val.up { color: var(--green); }
+  .metric-lbl { font-size: 11px; color: var(--gray-500); margin-top: 2px; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">Yogurtland</div>
+    <div class="title">Campaign Portal</div>
+    <div class="subtitle">Marketing · MKT-CAMPAIGN-LIFECYCLE-v2</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Work</div>
+    <div class="nav-item active" data-view="dashboard" onclick="showView('dashboard')">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path d="M3 4a1 1 0 011-1h3a1 1 0 011 1v3a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 7a1 1 0 011-1h3a1 1 0 011 1v5a1 1 0 01-1 1H4a1 1 0 01-1-1v-5zm7-7a1 1 0 011-1h5a1 1 0 011 1v5a1 1 0 01-1 1h-5a1 1 0 01-1-1V4zm0 9a1 1 0 011-1h5a1 1 0 011 1v3a1 1 0 01-1 1h-5a1 1 0 01-1-1v-3z"/></svg>
+      Dashboard
+    </div>
+    <div class="nav-item" data-view="campaigns" onclick="showView('campaigns')">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/></svg>
+      Campaigns
+      <span class="nav-badge" id="nav-badge-campaigns">0</span>
+    </div>
+    <div class="nav-item" data-view="tasks" onclick="showView('tasks')">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clip-rule="evenodd"/></svg>
+      My Tasks
+      <span class="nav-badge" id="nav-badge-tasks">0</span>
+    </div>
+    <div class="nav-item" data-view="guides" onclick="showView('guides')">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"/></svg>
+      Rollout Guides
+    </div>
+    <div class="nav-item" data-view="vendors" onclick="showView('vendors')">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"/><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"/></svg>
+      Vendors &amp; Production
+      <span class="nav-badge gray" id="nav-badge-vendors">0</span>
+    </div>
+    <div class="nav-item" data-view="recaps" onclick="showView('recaps')">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/></svg>
+      Recaps &amp; Lessons
+    </div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Knowledge &amp; Governance</div>
+    <div class="nav-item" data-view="raci" onclick="showView('raci')">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/></svg>
+      RACI &amp; Handoff
+    </div>
+    <div class="nav-item" data-view="kb" onclick="showView('kb')">
+      <svg viewBox="0 0 20 20" fill="currentColor"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/></svg>
+      Knowledge Base
+    </div>
+  </div>
+  <div class="sidebar-user">
+    <div class="role-switch">
+      <div class="role-btn active" id="role-loletta" onclick="setRole('loletta')">Loletta · R</div>
+      <div class="role-btn" id="role-sam" onclick="setRole('sam')">Sam · A</div>
+    </div>
+    <div class="role-meta" id="role-meta">Loletta Dao — Marketing Campaign Manager. Execution lead (Responsible).</div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div><span class="topbar-title" id="topbar-title">Dashboard</span><span class="topbar-sub" id="topbar-sub">Campaign lifecycle overview</span></div>
+    <div class="topbar-actions">
+      <button class="btn btn-outline" onclick="openCloneModal()">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1z"/><path d="M2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/></svg>
+        Clone &amp; Adapt
+      </button>
+      <button class="btn btn-primary" onclick="openNewCampaignModal()">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/></svg>
+        New Campaign
+      </button>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="view active" id="view-dashboard"></div>
+    <div class="view" id="view-campaigns"></div>
+    <div class="view" id="view-campaign-detail"></div>
+    <div class="view" id="view-tasks"></div>
+    <div class="view" id="view-guides"></div>
+    <div class="view" id="view-guide-detail"></div>
+    <div class="view" id="view-vendors"></div>
+    <div class="view" id="view-recaps"></div>
+    <div class="view" id="view-raci"></div>
+    <div class="view" id="view-kb"></div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="campaign-modal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title" id="cm-title">New Campaign</div><button class="modal-close" onclick="closeModal('campaign-modal')">&times;</button></div>
+    <div class="modal-body" id="cm-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('campaign-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitCampaign()">Create Campaign</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="task-modal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title" id="tm-title">Task</div><button class="modal-close" onclick="closeModal('task-modal')">&times;</button></div>
+    <div class="modal-body" id="tm-body"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="generic-modal">
+  <div class="modal wide">
+    <div class="modal-header"><div class="modal-title" id="gm-title"></div><button class="modal-close" onclick="closeModal('generic-modal')">&times;</button></div>
+    <div class="modal-body" id="gm-body"></div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════════════════════
+//  SEED DATA — extracted from Loletta Dao Work Analysis (Jan 2025 – Present)
+// ════════════════════════════════════════════════════════════════════════════
+
+const PHASES = [
+  { n:1, name:'Concept & Ideation', sub:'T–8 mo' },
+  { n:2, name:'Product & Creative', sub:'T–6 mo' },
+  { n:3, name:'Production & Procurement', sub:'T–4 mo' },
+  { n:4, name:'Pre-Launch Coordination', sub:'T–2 mo' },
+  { n:5, name:'Launch & Execution', sub:'Day 0–45' },
+  { n:6, name:'Post-Promotion Review', sub:'T+1 mo' },
+];
+
+// Helper to build a task
+let _tid = 0;
+function T(title, phase, status, prio, who, due, blocker) {
+  return { id:'t'+(++_tid), title, phase, status, prio, who, due:due||'', blocker:blocker||'' };
+}
+
+const SEED = [
+  {
+    id:'ts5', name:'Toy Story 5 — "Pixar Summer"', type:'Licensed_Collab', status:'Live', phase:5,
+    licensor:'Disney / Pixar', theme:'Movie tie-in · Summer blockbuster',
+    start:'2025-10-01', launch:'2026-06-08', end:'2026-07-23',
+    objective:'Drive summer traffic and loyalty sign-ups around the Toy Story 5 theatrical release with co-branded flavors, collectible character spoons, and in-store activations across ~210 locations.',
+    r:'Loletta Dao', a:'Sam Kwon',
+    budgetAllocated:420000, budgetActual:388500,
+    flavors:['Space Ranger Berry Blast','To Infinity Vanilla Swirl'],
+    toppings:['Star Command Crunch','Alien Gummies'],
+    gwp:['Character-shaped collectible spoons (6 designs)','Co-branded cups','Buzz & Woody standees'],
+    kpis:[{label:'Systemwide Sales Lift',target:'+18%',actual:'+15.4% (wk 3)'},{label:'Loyalty Sign-ups',target:'40K',actual:'27K'},{label:'Spoon Sell-through',target:'90%',actual:'—'}],
+    tasks:[
+      T('Review historical movie-tie-in performance & competitive scan',1,'Done','Medium','Loletta Dao','2025-10-08'),
+      T('Draft concept brief: flavors, spoon GWP, ROI estimate',1,'Done','High','Loletta Dao','2025-10-20'),
+      T('Concept approval — Sam sign-off',1,'Done','High','Sam Kwon','2025-10-24'),
+      T('Brief R&D — "Space Ranger Berry Blast" profile & naming',2,'Done','High','Loletta Dao','2025-12-05'),
+      T('Disney creative review — character depiction & logo use',2,'Done','Critical','Sam Kwon','2026-01-15'),
+      T('Finalize co-branded cup + standee artwork',2,'Done','Medium','Loletta Dao','2026-02-01'),
+      T('Source spoon vendor (overseas) + RFQ / PO',3,'Done','High','Loletta Dao','2026-02-20'),
+      T('Disney social compliance audit — overseas factory',3,'Done','Critical','Sam Kwon','2026-03-10'),
+      T('Resolve spoon delay — Chinese New Year shutdown (split launch)',3,'Done','Critical','Sam Kwon','2026-03-18'),
+      T('Quantity planning — ~300 spoons/store + DC allocation',3,'Done','High','Loletta Dao','2026-04-01'),
+      T('Draft Rollout Guide (incl. split-launch schedule)',4,'Done','High','Loletta Dao','2026-04-28'),
+      T('Rollout Guide — Sam final sign-off & publish',4,'Done','High','Sam Kwon','2026-05-05'),
+      T('Publish spoon-delay addendum (Jun 8 cups → Jun 19 spoons)',4,'Done','High','Loletta Dao','2026-05-12'),
+      T('Confirm launch readiness — shipments, training, assets live',5,'Done','High','Loletta Dao','2026-06-06'),
+      T('Weekly FBC & Marketing war-room — issue triage',5,'InProgress','High','Loletta Dao','2026-06-19'),
+      T('Monitor sales lift & loyalty metrics w/ Analytics',5,'InProgress','Medium','Loletta Dao','2026-06-22'),
+      T('Coordinate spoon Phase-2 launch (Jun 19 movie release)',5,'Blocked','Critical','Loletta Dao','2026-06-19','Awaiting DC receipt confirmation on 3 regions'),
+      T('Compile recap data — lift, traffic, spoon sell-through',6,'ToDo','Medium','Loletta Dao','2026-08-01'),
+    ],
+    issues:[
+      { title:'Spoon production delayed — Chinese New Year factory shutdown', sev:'Resolved', note:'Sam + Loletta decided on split launch. Cups/flavors launch Jun 8; spoons Jun 19 (aligns w/ movie release). Sam notified Disney; Loletta issued franchisee addendum.' },
+      { title:'3 regions report DC spoon receipt not yet confirmed', sev:'Open', note:'Blocking Phase-2 spoon launch confirmation. Escalated to Sam + Supply Chain (JT).' },
+    ],
+    vendors:[
+      { name:'Pacific Mold Co. (spoons)', po:'PO-TS5-001', status:'Shipped', amount:142000, eta:'2026-06-15' },
+      { name:'PrintWorks (cups & signage)', po:'PO-TS5-002', status:'Received', amount:98000, eta:'2026-05-28' },
+      { name:'DisplayCraft (standees)', po:'PO-TS5-003', status:'Received', amount:41000, eta:'2026-05-30' },
+    ],
+    guideId:'g-ts5',
+    lessons:[],
+    log:[
+      { dot:'pink', text:'<b>Campaign opened</b> — concept brief drafted.', time:'Oct 20, 2025' },
+      { dot:'teal', text:'Concept <b>approved by Sam Kwon</b> (A).', time:'Oct 24, 2025' },
+      { dot:'amber', text:'Risk logged: <b>spoon production delay</b> (CNY shutdown).', time:'Mar 12, 2026' },
+      { dot:'green', text:'<b>Split-launch decision</b> approved. Addendum published.', time:'May 12, 2026' },
+      { dot:'blue', text:'Campaign <b>went live</b> (cups + flavors).', time:'Jun 8, 2026' },
+    ],
+  },
+  {
+    id:'toofaced', name:'Too Faced × Yogurtland', type:'Licensed_Collab', status:'In_Development', phase:2,
+    licensor:'Too Faced (lifestyle)', theme:'Beauty / lifestyle cross-promo',
+    start:'2025-12-01', launch:'2026-09-15', end:'2026-10-31',
+    objective:'Cross-promotional lifestyle collab pairing Too Faced beauty aesthetics with limited-edition dessert flavors and shareable GWP to reach a younger, social-first guest segment.',
+    r:'Loletta Dao', a:'Sam Kwon',
+    budgetAllocated:260000, budgetActual:34000,
+    flavors:['Better Than Sex Chocolate Swirl','Peach Perfect Sorbet'],
+    toppings:['Glitter Sprinkle Dust','Peach Pearls'],
+    gwp:['Co-branded compact-style spoon case','Limited makeup-bag GWP'],
+    kpis:[{label:'Social Impressions',target:'5M',actual:'—'},{label:'Sales Lift',target:'+12%',actual:'—'}],
+    tasks:[
+      T('Historical lifestyle-collab performance scan',1,'Done','Medium','Loletta Dao','2025-12-10'),
+      T('Concept brief — beauty/dessert pairing + GWP',1,'Done','High','Loletta Dao','2026-01-05'),
+      T('Concept approval — Sam sign-off',1,'Done','High','Sam Kwon','2026-01-12'),
+      T('Brief R&D — flavor profiles & trademark-safe names',2,'InProgress','High','Loletta Dao','2026-07-01'),
+      T('Too Faced creative review — palette & messaging tone',2,'ToDo','High','Sam Kwon','2026-07-20'),
+      T('Define co-branded GWP spec (compact spoon case)',2,'ToDo','Medium','Loletta Dao','2026-07-25'),
+      T('Supply chain feasibility — topping sourcing',2,'Blocked','Medium','Loletta Dao','2026-07-15','Awaiting glitter-dust food-safety cert from supplier'),
+    ],
+    issues:[{ title:'Glitter-dust topping pending food-safety certification', sev:'Open', note:'Supplier cert (FDA-compliant edible glitter) outstanding. May require alternate topping.' }],
+    vendors:[{ name:'Lux Packaging (compact case)', po:'PO-TF-001 (draft)', status:'Quoting', amount:0, eta:'TBD' }],
+    guideId:null, lessons:[],
+    log:[
+      { dot:'pink', text:'<b>Campaign opened</b> — lifestyle collab concept.', time:'Jan 5, 2026' },
+      { dot:'teal', text:'Concept <b>approved by Sam Kwon</b>.', time:'Jan 12, 2026' },
+    ],
+  },
+  {
+    id:'jvke', name:'JVKE — Music Artist Collab', type:'Licensed_Collab', status:'Pre_Launch', phase:4,
+    licensor:'JVKE (music artist)', theme:'Music drop · One-day event',
+    start:'2025-11-15', launch:'2026-07-12', end:'2026-08-09',
+    objective:'Music-artist collaboration with custom flavor & toppings and a one-day in-store event modeled on the high-engagement Laufey activation.',
+    r:'Loletta Dao', a:'Sam Kwon',
+    budgetAllocated:175000, budgetActual:121000,
+    flavors:['JVKE Golden Hour Swirl'],
+    toppings:["JVKE's Sound Bites", "JVKE's Beat Drops (backup)"],
+    gwp:['Custom artist spoon','One-day event poster set'],
+    kpis:[{label:'Event-day Entries',target:'70K',actual:'—'},{label:'Social Reach',target:'3M',actual:'—'}],
+    tasks:[
+      T('Concept brief — music collab + one-day event',1,'Done','High','Loletta Dao','2025-11-25'),
+      T('Brief R&D — Golden Hour Swirl + Sound Bites topping',2,'Done','High','Loletta Dao','2026-02-10'),
+      T('Artist creative approval — logo & likeness',2,'Done','High','Sam Kwon','2026-03-15'),
+      T('Source custom spoon + event posters',3,'Done','Medium','Loletta Dao','2026-04-20'),
+      T('Event quantity plan (~300 spoons/store, high-traffic stores)',3,'Done','Medium','Loletta Dao','2026-05-10'),
+      T('Draft Rollout Guide + event execution instructions',4,'InProgress','High','Loletta Dao','2026-06-25'),
+      T('Legal review — one-day event rules & giveaways',4,'ToDo','High','Loletta Dao','2026-06-28'),
+      T('Rollout Guide — Sam sign-off',4,'ToDo','High','Sam Kwon','2026-07-01'),
+      T('Assign & track LMS training modules',4,'ToDo','Medium','Loletta Dao','2026-07-03'),
+    ],
+    issues:[],
+    vendors:[
+      { name:'Pacific Mold Co. (artist spoon)', po:'PO-JVK-001', status:'Production', amount:54000, eta:'2026-06-28' },
+      { name:'PrintWorks (event posters)', po:'PO-JVK-002', status:'QC', amount:18000, eta:'2026-06-22' },
+    ],
+    guideId:'g-jvke', lessons:[],
+    log:[
+      { dot:'pink', text:'<b>Campaign opened</b>.', time:'Nov 25, 2025' },
+      { dot:'teal', text:'Artist creative <b>approved</b>.', time:'Mar 15, 2026' },
+    ],
+  },
+  {
+    id:'spring', name:'Spring Innovations LTO', type:'Test_Innovation', status:'Ideation', phase:1,
+    licensor:null, theme:'Internal seasonal · Filler / test offerings',
+    start:'2026-04-01', launch:'2026-08-25', end:'2026-09-22',
+    objective:'Lighter filler-month LTO between major collabs to test new internal offerings (e.g., Signature Sauce) in CA before broader rollout.',
+    r:'Loletta Dao', a:'Sam Kwon',
+    budgetAllocated:60000, budgetActual:4000,
+    flavors:['Signature Sauce Swirl (CA test)'],
+    toppings:['Seasonal Berry Mix'],
+    gwp:[],
+    kpis:[{label:'CA Test Lift',target:'+8%',actual:'—'}],
+    tasks:[
+      T('Scan filler-month opportunities & cultural calendar',1,'Done','Low','Loletta Dao','2026-04-15'),
+      T('Draft lighter concept brief (test offerings)',1,'InProgress','Medium','Loletta Dao','2026-06-30'),
+      T('Align with R&D on Signature Sauce CA test',1,'ToDo','Medium','Loletta Dao','2026-07-05'),
+      T('Submit concept for Sam review',1,'ToDo','Medium','Loletta Dao','2026-07-10'),
+    ],
+    issues:[], vendors:[], guideId:null, lessons:[],
+    log:[{ dot:'pink', text:'<b>Ideation started</b> — filler LTO.', time:'Apr 15, 2026' }],
+  },
+  {
+    id:'laufey', name:'Laufey — "A Berry Laufey Day"', type:'Licensed_Collab', status:'Completed', phase:6,
+    licensor:'Laufey (music artist)', theme:'Music artist · One-day event',
+    start:'2025-01-10', launch:'2025-05-17', end:'2025-06-14',
+    objective:'One-day music-artist activation with custom swirl and rebranded toppings; high-engagement collectible spoon event in top stores.',
+    r:'Loletta Dao', a:'Sr. Marketing Manager (pre-transition)',
+    budgetAllocated:150000, budgetActual:147500,
+    flavors:['A Berry Laufey Day Swirl'],
+    toppings:['Laufberries'],
+    gwp:['Custom Laufey collectible spoon (~300/store)'],
+    kpis:[{label:'Event Entries',target:'60K',actual:'68K'},{label:'Social Reach',target:'2M',actual:'2.4M'},{label:'Spoon Sell-through',target:'85%',actual:'94%'}],
+    tasks:[
+      T('Full lifecycle — concept → recap',6,'Done','High','Loletta Dao','2025-06-14'),
+    ],
+    issues:[],
+    vendors:[{ name:'Pacific Mold Co. (spoons)', po:'PO-LAU-001', status:'Received', amount:62000, eta:'2025-05-05' }],
+    guideId:null,
+    lessons:[
+      { tags:['music_artist','one_day_event','custom_spoon_gwp'], good:'One-day event format created urgency → 94% spoon sell-through and 68K entries. Top-store allocation concentrated buzz where traffic was highest.', bad:'Some mid-tier stores requested spoons after selling out same-day; allocation model could flex.', rec:'Reuse one-day event template for music collabs (see JVKE). Add a small safety-stock buffer for reallocation.' },
+    ],
+    log:[
+      { dot:'green', text:'<b>Campaign completed</b> — recap presented.', time:'Jul 10, 2025' },
+    ],
+  },
+  {
+    id:'bttf', name:'Back to the Future — "Great Scott!"', type:'Licensed_Collab', status:'Completed', phase:6,
+    licensor:'Universal', theme:'Nostalgia · Movie anniversary',
+    start:'2024-12-01', launch:'2025-03-15', end:'2025-04-19',
+    objective:'Nostalgia-driven collab celebrating the BTTF anniversary with a signature pie flavor and a contest mechanic.',
+    r:'Loletta Dao', a:'Sr. Marketing Manager (pre-transition)',
+    budgetAllocated:200000, budgetActual:191000,
+    flavors:['Great Scott! Caramel Apple Pie'],
+    toppings:['Flux Crunch'],
+    gwp:['DeLorean-themed collectible cup'],
+    kpis:[{label:'Video Views',target:'60K',actual:'77K'},{label:'Sales Lift',target:'+14%',actual:'+16%'}],
+    tasks:[T('Full lifecycle — concept → recap',6,'Done','High','Loletta Dao','2025-04-19')],
+    issues:[],
+    vendors:[{ name:'PrintWorks (cups)', po:'PO-BTF-001', status:'Received', amount:71000, eta:'2025-03-01' }],
+    guideId:null,
+    lessons:[
+      { tags:['nostalgia','movie_anniversary'], good:'Nostalgia framing drove 77K video views (28% over target) and strong sales lift. Recognizable IP needed little guest education.', bad:'Contest mechanic was slightly complex; some franchisee questions on entry rules.', rec:'Keep contest rules simple & front-load Q&A in Rollout Guide for nostalgia campaigns.' },
+    ],
+    log:[{ dot:'green', text:'<b>Campaign completed</b> — 77K views.', time:'May 15, 2025' }],
+  },
+  {
+    id:'goldengirls', name:'Golden Girls — "Thank You For Being a Friend"', type:'Licensed_Collab', status:'Completed', phase:6,
+    licensor:'Disney (ABC/Touchstone)', theme:'Nostalgia · TV classic',
+    start:'2024-10-01', launch:'2025-01-18', end:'2025-02-22',
+    objective:'Nostalgia TV-classic collab with a cheesecake flavor and a custom spoon GWP targeting multi-generational guests.',
+    r:'Loletta Dao', a:'Sr. Marketing Manager (pre-transition)',
+    budgetAllocated:180000, budgetActual:176000,
+    flavors:['Thank You For Being a Friend Cheesecake'],
+    toppings:['Miami Graham Crunch'],
+    gwp:['Custom Golden Girls spoon set'],
+    kpis:[{label:'Sales Lift',target:'+12%',actual:'+13.5%'},{label:'Spoon Sell-through',target:'80%',actual:'88%'}],
+    tasks:[T('Full lifecycle — concept → recap',6,'Done','High','Loletta Dao','2025-02-22')],
+    issues:[],
+    vendors:[{ name:'Pacific Mold Co. (spoons)', po:'PO-GG-001', status:'Received', amount:58000, eta:'2025-01-05' }],
+    guideId:null,
+    lessons:[
+      { tags:['nostalgia','custom_spoon_gwp'], good:'Nostalgia + custom spoon GWP combo drove strong sell-through (88%). Multi-gen appeal widened the guest base.', bad:'Cheesecake flavor prep required extra Ops training; a few storage questions early.', rec:'Pattern confirmed: nostalgia + custom spoon GWP. Add a flavor-handling visual to the guide for prep-heavy flavors.' },
+    ],
+    log:[{ dot:'green', text:'<b>Campaign completed</b> — pattern validated.', time:'Mar 18, 2025' }],
+  },
+  {
+    id:'princess', name:'Princess Cruises Sweepstakes', type:'Licensed_Collab', status:'Completed', phase:6,
+    licensor:'Princess Cruises', theme:'Sweepstakes · Travel lifestyle',
+    start:'2024-11-01', launch:'2025-02-08', end:'2025-03-15',
+    objective:'High-engagement sweepstakes giving away a cruise, paired with a tropical flavor to drive loyalty sign-ups and entries.',
+    r:'Loletta Dao', a:'Sr. Marketing Manager (pre-transition)',
+    budgetAllocated:140000, budgetActual:138000,
+    flavors:['Tropical Getaway Swirl'],
+    toppings:['Island Coconut Flakes'],
+    gwp:['Sweepstakes — grand-prize cruise'],
+    kpis:[{label:'Sweepstakes Entries',target:'60K',actual:'76K'},{label:'Loyalty Sign-ups',target:'30K',actual:'41K'}],
+    tasks:[T('Full lifecycle — concept → recap',6,'Done','High','Loletta Dao','2025-03-15')],
+    issues:[],
+    vendors:[],
+    guideId:null,
+    lessons:[
+      { tags:['sweepstakes','loyalty'], good:'Sweepstakes drove 76K entries (27% over target) and 41K loyalty sign-ups — best loyalty conversion of the year. Big-prize hook + low entry friction worked.', bad:'Legal review of official rules took longer than planned; tight timeline near launch.', rec:'Start sweepstakes legal review earlier (Phase 3, not Phase 4). Reuse rules template.' },
+    ],
+    log:[{ dot:'green', text:'<b>Campaign completed</b> — 76K entries.', time:'Apr 10, 2025' }],
+  },
+];
+
+// Recurring (non-campaign) operational tasks
+let RECURRING = [
+  T('Compile monthly marketing invoices & follow up w/ Finance',null,'InProgress','Medium','Loletta Dao','2026-06-25'),
+  T('Prepare departmental P&L materials for Sam / Finance mtg',null,'ToDo','High','Loletta Dao','2026-06-30'),
+  T('Respond to ad-hoc franchisee LSM / material requests',null,'InProgress','Low','Loletta Dao','2026-06-20'),
+  T('20th Anniversary — June loyalty rewards mechanic',null,'ToDo','Medium','Loletta Dao','2026-06-28'),
+  T('Update Promotion SOPs / process-improvement backlog',null,'ToDo','Low','Loletta Dao','2026-07-15'),
+  T('Prepare new-store marketing kits & digital onboarding',null,'Done','Medium','Loletta Dao','2026-06-12'),
+];
+RECURRING.forEach(t => t.campaign='Recurring Ops');
+
+// Rollout Guides
+const GUIDES = {
+  'g-ts5': {
+    campaignId:'ts5', title:'Toy Story 5 — Rollout Guide', version:3, status:'Published',
+    publishedTo:['Franchisee Portal','Email Digest','Print PDF (POP Kit)','Internal KB'],
+    approvals:[
+      { name:'Loletta Dao', role:'Drafted (R)', status:'done' },
+      { name:'Ops / R&D / Legal', role:'Cross-functional review', status:'done' },
+      { name:'Sam Kwon', role:'Final sign-off (A)', status:'done' },
+    ],
+    addenda:[{ v:3, note:'Spoon launch moved to Jun 19 (movie release) due to CNY factory delay. Cups & flavors remain Jun 8.', date:'May 12, 2026' }],
+    sections:[
+      { title:'1. Campaign Overview & Objectives', body:'Toy Story 5 "Pixar Summer" runs Jun 8 – Jul 23, 2026 across ~210 locations. Objectives: +18% systemwide sales lift, 40K loyalty sign-ups, 90% spoon sell-through. KPIs tracked weekly in the War Room.' },
+      { title:'2. Phased Product Launch Schedule', body:'• Jun 8 — Flavors (Space Ranger Berry Blast, To Infinity Vanilla Swirl) + co-branded cups + standees go live.\n• Jun 19 — Collectible character spoons launch (aligned to movie theatrical release). See Addendum v3.' },
+      { title:'3. In-Store Execution Instructions', body:'Signage install priority: (1) window cling, (2) LED menu content, (3) standees at entry, (4) countertop spoon display. New flavor handling/storage per R&D card. Spoon GWP: min $7 purchase, limit 1 per guest, "do not sell" spoons separately.' },
+      { title:'4. GWP / Spoon Redemption Rules', body:'6 collectible designs, randomly distributed. Min purchase $7. Limit 1 spoon per guest per visit. Proof-of-purchase required. Do NOT sell spoons à la carte. Reallocation requests via portal ticket.' },
+      { title:'5. Training Requirements (LMS)', body:'Modules: "TS5 Flavor Handling" (due Jun 5), "Spoon GWP Rules" (due Jun 17). Completion tracked in LMS; managers confirm 100% before launch.' },
+      { title:'6. Franchisee Q&A', body:'Q: When do spoons arrive? A: Jun 19 per Addendum v3. Q: Can guests buy spoons? A: No, GWP only. Q: What if we run out? A: Submit a reallocation ticket in the portal.' },
+      { title:'7. Compliance Notes', body:'Prop 65 signage included in CA POP kits. Disney licensed-asset usage per brand guide — do not alter character art. Social compliance audit on file (overseas factory).' },
+    ],
+  },
+  'g-jvke': {
+    campaignId:'jvke', title:'JVKE — Rollout Guide (Draft)', version:1, status:'Draft',
+    publishedTo:[],
+    approvals:[
+      { name:'Loletta Dao', role:'Drafting (R)', status:'inprogress' },
+      { name:'Legal', role:'Event rules review', status:'pending' },
+      { name:'Sam Kwon', role:'Final sign-off (A)', status:'pending' },
+    ],
+    addenda:[],
+    sections:[
+      { title:'1. Campaign Overview & Objectives', body:'JVKE music collab with a one-day in-store event on Jul 12, 2026. Modeled on the Laufey activation (94% spoon sell-through). Target 70K event-day entries.' },
+      { title:'2. Product Schedule', body:'Golden Hour Swirl + JVKE\'s Sound Bites topping launch Jul 12. Beat Drops held as backup topping if supply slips.' },
+      { title:'3. One-Day Event Execution', body:'[DRAFT] Event-day setup, photo ops, artist spoon distribution (~300/store, top-traffic stores). Detailed run-of-show pending.' },
+      { title:'4. Event Rules & Giveaways', body:'[PENDING LEGAL] Entry mechanics, eligibility, and giveaway rules under legal review.' },
+    ],
+  },
+};
+
+// ════════════════════════════════════════════════════════════════════════════
+//  STATE & PERSISTENCE
+// ════════════════════════════════════════════════════════════════════════════
+const STORE_KEY = 'yl_mkt_portal_v1';
+let CAMPAIGNS = SEED;
+let ROLE = 'loletta';
+
+function persist() {
+  try {
+    const snap = {
+      role: ROLE,
+      tasks: {}, recurring: RECURRING.map(t => ({id:t.id,status:t.status,blocker:t.blocker})),
+      guides: {},
+    };
+    CAMPAIGNS.forEach(c => { snap.tasks[c.id] = { phase:c.phase, status:c.status, tasks:c.tasks.map(t=>({id:t.id,status:t.status,blocker:t.blocker})) }; });
+    Object.keys(GUIDES).forEach(g => { snap.guides[g] = { version:GUIDES[g].version, status:GUIDES[g].status, sections:GUIDES[g].sections.map(s=>s.body) }; });
+    localStorage.setItem(STORE_KEY, JSON.stringify(snap));
+  } catch(e) {}
+}
+function restore() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return;
+    const snap = JSON.parse(raw);
+    if (snap.role) ROLE = snap.role;
+    if (snap.tasks) CAMPAIGNS.forEach(c => {
+      const s = snap.tasks[c.id]; if (!s) return;
+      c.phase = s.phase; c.status = s.status;
+      s.tasks.forEach(st => { const t = c.tasks.find(x=>x.id===st.id); if (t){ t.status=st.status; t.blocker=st.blocker; } });
+    });
+    if (snap.recurring) snap.recurring.forEach(st => { const t = RECURRING.find(x=>x.id===st.id); if (t){ t.status=st.status; t.blocker=st.blocker; } });
+    if (snap.guides) Object.keys(snap.guides).forEach(g => { if (GUIDES[g]){ GUIDES[g].version=snap.guides[g].version; GUIDES[g].status=snap.guides[g].status; snap.guides[g].sections.forEach((b,i)=>{ if(GUIDES[g].sections[i]) GUIDES[g].sections[i].body=b; }); } });
+  } catch(e) {}
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  HELPERS
+// ════════════════════════════════════════════════════════════════════════════
+const STATUS_BADGE = {
+  Ideation:'badge-gray', In_Development:'badge-blue', Pre_Launch:'badge-purple', Live:'badge-pink', Completed:'badge-green', Archived:'badge-gray',
+};
+const TASK_STATUS_BADGE = { ToDo:'badge-gray', InProgress:'badge-blue', Blocked:'badge-red', Done:'badge-green' };
+const PRIO_BADGE = { Low:'badge-gray', Medium:'badge-blue', High:'badge-amber', Critical:'badge-red' };
+
+function fmtMoney(n){ return '$' + n.toLocaleString('en-US'); }
+function statusLabel(s){ return s.replace('_',' '); }
+function allCampaignTasks(){ let out=[]; CAMPAIGNS.forEach(c => c.tasks.forEach(t => out.push(Object.assign({campaign:c.name, campaignId:c.id}, t)))); return out; }
+function myOpenTasks(){
+  const owner = ROLE==='loletta' ? 'Loletta Dao' : 'Sam Kwon';
+  let out = allCampaignTasks().concat(RECURRING.map(t=>Object.assign({campaignId:null},t)));
+  return out.filter(t => t.who===owner && t.status!=='Done');
+}
+function campaignProgress(c){ const d=c.tasks.filter(t=>t.status==='Done').length; return Math.round(d/c.tasks.length*100); }
+
+function escapeHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ════════════════════════════════════════════════════════════════════════════
+//  NAVIGATION
+// ════════════════════════════════════════════════════════════════════════════
+const VIEW_TITLES = {
+  dashboard:['Dashboard','Campaign lifecycle overview'],
+  campaigns:['Campaigns','All promotion campaigns'],
+  'campaign-detail':['Campaign Detail',''],
+  tasks:['My Tasks','Personal execution queue'],
+  guides:['Rollout Guides','Builder · approvals · publishing'],
+  'guide-detail':['Rollout Guide',''],
+  vendors:['Vendors & Production','PO command center'],
+  recaps:['Recaps & Lessons','Post-campaign learning'],
+  raci:['RACI & Handoff','Ownership history & transition'],
+  kb:['Knowledge Base','Searchable campaign knowledge'],
+};
+function showView(v, arg){
+  document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.view===v));
+  const t = VIEW_TITLES[v] || [v,''];
+  document.getElementById('topbar-title').textContent = t[0];
+  document.getElementById('topbar-sub').textContent = t[1];
+  const R = {
+    dashboard:renderDashboard, campaigns:renderCampaigns, tasks:renderTasks,
+    guides:renderGuides, vendors:renderVendors, recaps:renderRecaps, raci:renderRaci, kb:renderKB,
+    'campaign-detail':()=>renderCampaignDetail(arg), 'guide-detail':()=>renderGuideDetail(arg),
+  };
+  if (R[v]) R[v]();
+  document.querySelector('.content').scrollTop = 0;
+}
+
+function setRole(r){
+  ROLE = r;
+  document.getElementById('role-loletta').classList.toggle('active', r==='loletta');
+  document.getElementById('role-sam').classList.toggle('active', r==='sam');
+  document.getElementById('role-meta').textContent = r==='loletta'
+    ? 'Loletta Dao — Marketing Campaign Manager. Execution lead (Responsible).'
+    : 'Sam Kwon — Head of Marketing / Sr. Director. Accountable (A) for strategy, approvals, budget.';
+  persist();
+  updateBadges();
+  const active = document.querySelector('.nav-item.active');
+  if (active) showView(active.dataset.view);
+}
+
+function updateBadges(){
+  document.getElementById('nav-badge-campaigns').textContent = CAMPAIGNS.filter(c=>['Ideation','In_Development','Pre_Launch','Live'].includes(c.status)).length;
+  document.getElementById('nav-badge-tasks').textContent = myOpenTasks().length;
+  let vcount=0; CAMPAIGNS.forEach(c=>c.vendors.forEach(v=>{ if(v.status!=='Received') vcount++; }));
+  document.getElementById('nav-badge-vendors').textContent = vcount;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  DASHBOARD
+// ════════════════════════════════════════════════════════════════════════════
+function renderDashboard(){
+  const active = CAMPAIGNS.filter(c=>['Ideation','In_Development','Pre_Launch','Live'].includes(c.status));
+  const live = CAMPAIGNS.filter(c=>c.status==='Live');
+  const completed = CAMPAIGNS.filter(c=>c.status==='Completed');
+  const open = myOpenTasks();
+  const blocked = allCampaignTasks().filter(t=>t.status==='Blocked');
+  const totalBudget = active.reduce((s,c)=>s+c.budgetAllocated,0);
+  const spentBudget = active.reduce((s,c)=>s+c.budgetActual,0);
+
+  const ownerLabel = ROLE==='loletta' ? 'Loletta' : 'Sam';
+  let html = `
+  <div class="stats-grid">
+    <div class="stat-card stat-pink"><div class="stat-label">Active Campaigns</div><div class="stat-value">${active.length}</div><div class="stat-sub">${live.length} live now</div></div>
+    <div class="stat-card stat-amber"><div class="stat-label">${ownerLabel}'s Open Tasks</div><div class="stat-value">${open.length}</div><div class="stat-sub">${open.filter(t=>t.prio==='Critical'||t.prio==='High').length} high / critical</div></div>
+    <div class="stat-card stat-red"><div class="stat-label">Blocked Tasks</div><div class="stat-value">${blocked.length}</div><div class="stat-sub">need escalation</div></div>
+    <div class="stat-card stat-teal"><div class="stat-label">Active Budget</div><div class="stat-value">${fmtMoney(Math.round(spentBudget/1000))}K</div><div class="stat-sub">of ${fmtMoney(Math.round(totalBudget/1000))}K allocated</div></div>
+  </div>`;
+
+  // alerts
+  if (blocked.length){
+    html += `<div class="notice-error"><strong>${blocked.length} blocked task${blocked.length>1?'s':''} need attention:</strong> ` +
+      blocked.map(t=>`${escapeHtml(t.title)} <em>(${escapeHtml(t.campaign)})</em>`).join(' · ') + `</div>`;
+  }
+  const ts5 = CAMPAIGNS.find(c=>c.id==='ts5');
+  if (ts5 && ts5.status==='Live') html += `<div class="notice-warn"><strong>Toy Story 5 War Room:</strong> Spoon Phase-2 launch (Jun 19) is blocked pending DC receipt in 3 regions. Sam + Supply Chain notified.</div>`;
+
+  // Active campaigns table
+  html += `<div class="section-header"><div class="section-title">Active Campaigns — Lifecycle Status</div><div class="btn btn-outline btn-sm" onclick="showView('campaigns')">View all</div></div>`;
+  html += `<div class="table-wrap"><table><thead><tr><th>Campaign</th><th>Type</th><th>Phase</th><th>Launch</th><th>Progress</th><th>R / A</th><th>Status</th></tr></thead><tbody>`;
+  active.forEach(c => {
+    html += `<tr class="clickable" onclick="showView('campaign-detail','${c.id}')">
+      <td><div class="td-name">${escapeHtml(c.name)}</div><div class="td-sub">${c.licensor?escapeHtml(c.licensor):'Internal'}</div></td>
+      <td><span class="badge badge-gray">${c.type.replace(/_/g,' ')}</span></td>
+      <td><span class="badge badge-purple">P${c.phase} · ${PHASES[c.phase-1].name.split(' ')[0]}</span></td>
+      <td><div class="td-name">${fmtDate(c.launch)}</div></td>
+      <td><div style="display:flex;align-items:center;gap:8px;"><div class="pbar"><div class="pbar-fill" style="width:${campaignProgress(c)}%"></div></div><span style="font-size:11px;color:var(--gray-500);">${campaignProgress(c)}%</span></div></td>
+      <td><span class="raci-chip raci-r">R</span>${c.r.split(' ')[0]} <span class="raci-chip raci-a" style="margin-left:4px;">A</span>${c.a.split(' ')[0]}</td>
+      <td><span class="badge ${STATUS_BADGE[c.status]}"><span class="badge-dot"></span>${statusLabel(c.status)}</span></td>
+    </tr>`;
+  });
+  html += `</tbody></table></div>`;
+
+  // Two-column: my tasks + approval queue
+  html += `<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">`;
+  html += `<div class="card"><div class="card-header"><div class="card-title">${ownerLabel}'s Priority Tasks</div><div class="btn btn-outline btn-sm" onclick="showView('tasks')">Open queue</div></div><div class="card-body">`;
+  const top = open.sort((a,b)=>prioRank(b.prio)-prioRank(a.prio)).slice(0,6);
+  if (!top.length) html += `<div class="empty">No open tasks. 🎉</div>`;
+  top.forEach(t => {
+    html += `<div class="task-row"><div class="task-check ${t.status==='Blocked'?'blocked':''}" onclick="toggleTask('${t.campaignId||''}','${t.id}')"></div>
+      <div class="task-main"><div class="task-title">${escapeHtml(t.title)}</div>
+      <div class="task-meta"><span class="badge ${PRIO_BADGE[t.prio]}">${t.prio}</span><span class="task-meta-item">${escapeHtml(t.campaign||'Recurring Ops')}</span>${t.due?`<span class="task-meta-item">Due ${fmtDate(t.due)}</span>`:''}</div></div></div>`;
+  });
+  html += `</div></div>`;
+
+  // Approval queue (Sam's lens emphasis)
+  const approvals = collectApprovals();
+  html += `<div class="card"><div class="card-header"><div class="card-title">Approval Queue <small style="font-weight:500;color:var(--gray-400);">(Sam · A)</small></div></div><div class="card-body">`;
+  if (!approvals.length) html += `<div class="empty">Nothing awaiting approval.</div>`;
+  approvals.forEach(a => {
+    html += `<div class="approval-row"><div class="approval-icon approval-pending">⏳</div><div style="flex:1;"><div class="approval-name">${escapeHtml(a.title)}</div><div class="approval-role">${escapeHtml(a.sub)}</div></div><div class="badge ${PRIO_BADGE[a.prio]||'badge-amber'}">${a.prio||'Pending'}</div></div>`;
+  });
+  html += `</div></div></div>`;
+
+  document.getElementById('view-dashboard').innerHTML = html;
+}
+
+function collectApprovals(){
+  let out=[];
+  allCampaignTasks().forEach(t => { if (t.who==='Sam Kwon' && (t.status==='ToDo'||t.status==='InProgress')) out.push({title:t.title, sub:t.campaign, prio:t.prio}); });
+  return out.slice(0,6);
+}
+function prioRank(p){ return {Critical:4,High:3,Medium:2,Low:1}[p]||0; }
+function fmtDate(d){ if(!d) return '—'; const dt=new Date(d+'T00:00:00'); return dt.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+
+// ════════════════════════════════════════════════════════════════════════════
+//  CAMPAIGNS LIST
+// ════════════════════════════════════════════════════════════════════════════
+function renderCampaigns(){
+  let html = `<div class="tab-bar" id="camp-tabs">
+    <div class="tab active" onclick="filterCampaigns('all',this)">All (${CAMPAIGNS.length})</div>
+    <div class="tab" onclick="filterCampaigns('active',this)">Active</div>
+    <div class="tab" onclick="filterCampaigns('Live',this)">Live</div>
+    <div class="tab" onclick="filterCampaigns('Completed',this)">Completed</div>
+  </div>`;
+  html += `<div class="table-wrap"><table><thead><tr><th>Campaign</th><th>Type</th><th>Licensor</th><th>Phase</th><th>Launch</th><th>Budget</th><th>Progress</th><th>Status</th></tr></thead><tbody id="camp-tbody">`;
+  CAMPAIGNS.forEach(c => {
+    html += `<tr class="clickable" data-status="${c.status}" onclick="showView('campaign-detail','${c.id}')">
+      <td><div class="td-name">${escapeHtml(c.name)}</div><div class="td-sub">${escapeHtml(c.theme)}</div></td>
+      <td><span class="badge badge-gray">${c.type.replace(/_/g,' ')}</span></td>
+      <td>${c.licensor?escapeHtml(c.licensor):'<span style="color:var(--gray-400)">Internal</span>'}</td>
+      <td><span class="badge badge-purple">P${c.phase}</span></td>
+      <td>${fmtDate(c.launch)}</td>
+      <td><div class="td-name">${fmtMoney(c.budgetAllocated)}</div><div class="td-sub">${fmtMoney(c.budgetActual)} spent</div></td>
+      <td><div style="display:flex;align-items:center;gap:8px;"><div class="pbar"><div class="pbar-fill" style="width:${campaignProgress(c)}%"></div></div><span style="font-size:11px;color:var(--gray-500);">${campaignProgress(c)}%</span></div></td>
+      <td><span class="badge ${STATUS_BADGE[c.status]}"><span class="badge-dot"></span>${statusLabel(c.status)}</span></td>
+    </tr>`;
+  });
+  html += `</tbody></table></div>`;
+  document.getElementById('view-campaigns').innerHTML = html;
+}
+function filterCampaigns(f, el){
+  document.querySelectorAll('#camp-tabs .tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('#camp-tbody tr').forEach(r => {
+    const s = r.dataset.status;
+    let show = f==='all' || s===f || (f==='active' && ['Ideation','In_Development','Pre_Launch','Live'].includes(s));
+    r.style.display = show ? '' : 'none';
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  CAMPAIGN DETAIL
+// ════════════════════════════════════════════════════════════════════════════
+function renderCampaignDetail(id){
+  const c = CAMPAIGNS.find(x=>x.id===id); if(!c) return;
+  let html = `<div class="breadcrumb" onclick="showView('campaigns')">← All Campaigns</div>`;
+  html += `<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
+    <div><h2 style="font-size:20px;color:var(--gray-900);">${escapeHtml(c.name)}</h2>
+    <div style="margin-top:6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+      <span class="badge ${STATUS_BADGE[c.status]}"><span class="badge-dot"></span>${statusLabel(c.status)}</span>
+      <span class="badge badge-gray">${c.type.replace(/_/g,' ')}</span>
+      ${c.licensor?`<span class="badge badge-pink">${escapeHtml(c.licensor)}</span>`:''}
+      <span style="font-size:12px;color:var(--gray-400);">${fmtDate(c.start)} → ${fmtDate(c.end)}</span>
+    </div></div>
+    <div style="display:flex;gap:8px;">
+      ${c.guideId?`<button class="btn btn-outline btn-sm" onclick="showView('guide-detail','${c.guideId}')">Rollout Guide</button>`:''}
+      <button class="btn btn-primary btn-sm" onclick="openCloneModal('${c.id}')">Clone &amp; Adapt</button>
+    </div></div>`;
+
+  // Phase tracker
+  html += `<div class="phase-tracker">`;
+  PHASES.forEach(p => {
+    const cls = p.n < c.phase ? 'done' : (p.n===c.phase ? 'active' : '');
+    html += `<div class="phase-item ${cls}"><div class="phase-circle">${p.n<c.phase?'✓':p.n}</div><div class="phase-label">${p.name}</div><div class="phase-sub">${p.sub}</div></div>`;
+  });
+  html += `</div>`;
+
+  // Phase gate
+  html += renderPhaseGate(c);
+
+  // grid
+  html += `<div class="detail-grid"><div>`;
+
+  // Tasks card (grouped by phase)
+  html += `<div class="card"><div class="card-header"><div class="card-title">Tasks — ${c.tasks.filter(t=>t.status==='Done').length}/${c.tasks.length} done</div><div class="btn btn-outline btn-sm" onclick="openAddTaskModal('${c.id}')">+ Add Task</div></div><div class="card-body">`;
+  for (let p=1;p<=6;p++){
+    const pt = c.tasks.filter(t=>t.phase===p);
+    if(!pt.length) continue;
+    html += `<div style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.04em;margin:14px 0 4px;">Phase ${p} · ${PHASES[p-1].name}</div>`;
+    pt.forEach(t => {
+      const owner = t.who===c.a ? 'A' : 'R';
+      html += `<div class="task-row"><div class="task-check ${t.status==='Done'?'done':t.status==='Blocked'?'blocked':''}" onclick="toggleTask('${c.id}','${t.id}')"></div>
+        <div class="task-main"><div class="task-title ${t.status==='Done'?'done':''}">${escapeHtml(t.title)}</div>
+        <div class="task-meta">
+          <span class="badge ${TASK_STATUS_BADGE[t.status]}">${t.status}</span>
+          <span class="badge ${PRIO_BADGE[t.prio]}">${t.prio}</span>
+          <span class="task-meta-item"><span class="raci-chip ${owner==='A'?'raci-a':'raci-r'}">${owner}</span>${escapeHtml(t.who)}</span>
+          ${t.due?`<span class="task-meta-item">Due ${fmtDate(t.due)}</span>`:''}
+          ${t.blocker?`<span class="badge badge-red">⚠ ${escapeHtml(t.blocker)}</span>`:''}
+        </div></div>
+        <div style="display:flex;gap:4px;align-items:center;">${statusCycleBtn(c.id,t)}</div></div>`;
+    });
+  }
+  html += `</div></div>`;
+
+  // Issues / risk log
+  if (c.issues.length){
+    html += `<div class="card"><div class="card-header"><div class="card-title">Issue & Risk Log</div></div><div class="card-body">`;
+    c.issues.forEach(i => {
+      const cls = i.sev==='Open'?'notice-error':i.sev==='Resolved'?'notice-info':'notice-warn';
+      html += `<div class="${cls}" style="margin-bottom:10px;"><strong>${escapeHtml(i.title)}</strong> <span class="badge ${i.sev==='Open'?'badge-red':'badge-green'}" style="margin-left:6px;">${i.sev}</span><div style="margin-top:6px;color:var(--gray-700);">${escapeHtml(i.note)}</div></div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  html += `</div><div>`; // right column
+
+  // Overview card
+  html += `<div class="card"><div class="card-header"><div class="card-title">Overview</div></div><div class="card-body">
+    <div class="info-row"><div class="info-label">Objective</div><div class="info-value">${escapeHtml(c.objective)}</div></div>
+    <div class="info-row"><div class="info-label">Theme</div><div class="info-value">${escapeHtml(c.theme)}</div></div>
+    <div class="info-row"><div class="info-label">Launch</div><div class="info-value highlight">${fmtDate(c.launch)}</div></div>
+    <div class="info-row"><div class="info-label">Responsible (R)</div><div class="info-value"><span class="raci-chip raci-r">R</span>${escapeHtml(c.r)}</div></div>
+    <div class="info-row"><div class="info-label">Accountable (A)</div><div class="info-value"><span class="raci-chip raci-a">A</span>${escapeHtml(c.a)}</div></div>
+  </div></div>`;
+
+  // Product card
+  html += `<div class="card"><div class="card-header"><div class="card-title">Product</div></div><div class="card-body">`;
+  html += `<div style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;margin-bottom:6px;">Flavors</div><div class="pill-list" style="margin-bottom:12px;">${c.flavors.map(f=>`<span class="pill flavor">${escapeHtml(f)}</span>`).join('')||'—'}</div>`;
+  html += `<div style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;margin-bottom:6px;">Toppings</div><div class="pill-list" style="margin-bottom:12px;">${c.toppings.map(f=>`<span class="pill topping">${escapeHtml(f)}</span>`).join('')||'—'}</div>`;
+  html += `<div style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;margin-bottom:6px;">GWP / Mechanic</div><div class="pill-list">${c.gwp.map(f=>`<span class="pill gwp">${escapeHtml(f)}</span>`).join('')||'—'}</div>`;
+  html += `</div></div>`;
+
+  // Budget card
+  const pct = Math.round(c.budgetActual/c.budgetAllocated*100);
+  const bcls = pct>100?'over':pct>90?'warn':'';
+  html += `<div class="card"><div class="card-header"><div class="card-title">Budget</div></div><div class="card-body">
+    <div style="display:flex;justify-content:space-between;font-size:13px;"><span style="font-weight:700;">${fmtMoney(c.budgetActual)}</span><span style="color:var(--gray-400);">of ${fmtMoney(c.budgetAllocated)}</span></div>
+    <div class="budget-bar"><div class="budget-fill ${bcls}" style="width:${Math.min(pct,100)}%"></div></div>
+    <div style="font-size:11px;color:var(--gray-500);">${pct}% committed · ${fmtMoney(c.budgetAllocated-c.budgetActual)} remaining</div>
+  </div></div>`;
+
+  // KPIs card
+  html += `<div class="card"><div class="card-header"><div class="card-title">KPIs</div></div><div class="card-body">`;
+  c.kpis.forEach(k => { html += `<div class="info-row"><div class="info-label">${escapeHtml(k.label)}</div><div class="info-value"><b>${escapeHtml(k.actual)}</b> <span style="color:var(--gray-400);">/ ${escapeHtml(k.target)}</span></div></div>`; });
+  html += `</div></div>`;
+
+  // Audit / timeline
+  html += `<div class="card"><div class="card-header"><div class="card-title">Audit Timeline</div></div><div class="card-body"><ul class="timeline">`;
+  c.log.forEach(l => html += `<li class="tl-item"><div class="tl-dot tl-dot-${l.dot}"></div><div><div class="tl-text">${l.text}</div><div class="tl-time">${l.time}</div></div></li>`);
+  html += `</ul></div></div>`;
+
+  html += `</div></div>`;
+  document.getElementById('view-campaign-detail').innerHTML = html;
+}
+
+function renderPhaseGate(c){
+  if (c.phase>=6) return '';
+  const phaseTasks = c.tasks.filter(t=>t.phase===c.phase);
+  const undone = phaseTasks.filter(t=>t.status!=='Done');
+  if (!undone.length && phaseTasks.length){
+    return `<div class="gate-banner gate-ok"><strong>✓ Phase ${c.phase} gate clear.</strong> All Phase ${c.phase} tasks done — campaign is ready to advance to Phase ${c.phase+1} (${PHASES[c.phase].name}). <button class="btn btn-teal btn-sm" style="margin-left:auto;" onclick="advancePhase('${c.id}')">Advance to Phase ${c.phase+1}</button></div>`;
+  }
+  return `<div class="gate-banner gate-block"><strong>⛔ Phase ${c.phase} gate blocked.</strong> ${undone.length} task${undone.length>1?'s':''} remaining in ${PHASES[c.phase-1].name} before advancing. Workflow engine holds the campaign at this phase.</div>`;
+}
+function advancePhase(id){
+  const c = CAMPAIGNS.find(x=>x.id===id); if(!c||c.phase>=6) return;
+  c.phase++;
+  if (c.phase>=6 && c.status!=='Completed') {} // stays as-is
+  // bump status with phase
+  const map = {1:'Ideation',2:'In_Development',3:'In_Development',4:'Pre_Launch',5:'Live',6:'Completed'};
+  if (['Ideation','In_Development','Pre_Launch','Live'].includes(c.status)) c.status = map[c.phase] || c.status;
+  c.log.unshift({ dot:'blue', text:`<b>Advanced to Phase ${c.phase}</b> — ${PHASES[c.phase-1].name}.`, time:'Jun 18, 2026' });
+  persist(); updateBadges(); renderCampaignDetail(id);
+}
+
+function statusCycleBtn(cid, t){
+  const next = { ToDo:'InProgress', InProgress:'Done', Blocked:'InProgress', Done:'ToDo' };
+  const label = { ToDo:'Start', InProgress:'Complete', Blocked:'Unblock', Done:'Reopen' };
+  return `<button class="btn btn-outline btn-sm" onclick="event.stopPropagation();setTaskStatus('${cid}','${t.id}','${next[t.status]}')">${label[t.status]}</button>`;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  TASK ACTIONS
+// ════════════════════════════════════════════════════════════════════════════
+function findTask(cid, tid){
+  if (!cid){ return RECURRING.find(t=>t.id===tid); }
+  const c = CAMPAIGNS.find(x=>x.id===cid); if(!c) return null;
+  return c.tasks.find(t=>t.id===tid);
+}
+function toggleTask(cid, tid){
+  const t = findTask(cid, tid); if(!t) return;
+  t.status = t.status==='Done' ? 'ToDo' : 'Done';
+  afterTaskChange(cid);
+}
+function setTaskStatus(cid, tid, s){
+  const t = findTask(cid, tid); if(!t) return;
+  t.status = s;
+  if (s!=='Blocked') t.blocker='';
+  afterTaskChange(cid);
+}
+function afterTaskChange(cid){
+  persist(); updateBadges();
+  const active = document.querySelector('.nav-item.active').dataset.view;
+  if (active==='campaign-detail') renderCampaignDetail(cid);
+  else if (active==='dashboard') renderDashboard();
+  else if (active==='tasks') renderTasks();
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  MY TASKS (kanban)
+// ════════════════════════════════════════════════════════════════════════════
+let taskScope = 'mine';
+function renderTasks(){
+  const owner = ROLE==='loletta' ? 'Loletta Dao' : 'Sam Kwon';
+  let html = `<div class="tab-bar" id="task-tabs">
+    <div class="tab ${taskScope==='mine'?'active':''}" onclick="setTaskScope('mine')">My Tasks (${owner.split(' ')[0]})</div>
+    <div class="tab ${taskScope==='all'?'active':''}" onclick="setTaskScope('all')">All Tasks</div>
+    <div class="tab ${taskScope==='recurring'?'active':''}" onclick="setTaskScope('recurring')">Recurring Ops</div>
+  </div>`;
+
+  let tasks;
+  if (taskScope==='mine') tasks = myOpenTasks().concat(allCampaignTasks().filter(t=>t.who===owner&&t.status==='Done')).concat(RECURRING.filter(t=>t.who===owner));
+  else if (taskScope==='recurring') tasks = RECURRING.map(t=>Object.assign({campaignId:null,campaign:'Recurring Ops'},t));
+  else tasks = allCampaignTasks().concat(RECURRING.map(t=>Object.assign({campaignId:null,campaign:'Recurring Ops'},t)));
+
+  const cols = ['ToDo','InProgress','Blocked','Done'];
+  const colNames = {ToDo:'To Do',InProgress:'In Progress',Blocked:'Blocked',Done:'Done'};
+  html += `<div class="kanban">`;
+  cols.forEach(col => {
+    const items = tasks.filter(t=>t.status===col);
+    html += `<div class="kanban-col"><div class="kanban-head"><span>${colNames[col]}</span><span>${items.length}</span></div>`;
+    items.forEach(t => {
+      html += `<div class="kanban-card" onclick="openTaskModal('${t.campaignId||''}','${t.id}')">
+        <div class="prio-bar prio-${t.prio}"></div>
+        <div class="kc-title">${escapeHtml(t.title)}</div>
+        <div class="kc-meta"><span>${escapeHtml((t.campaign||'Recurring Ops').slice(0,22))}</span><span>${t.due?fmtDate(t.due).replace(', '+new Date(t.due+'T00:00:00').getFullYear(),''):''}</span></div>
+      </div>`;
+    });
+    if(!items.length) html += `<div style="font-size:11px;color:var(--gray-400);text-align:center;padding:14px;">—</div>`;
+    html += `</div>`;
+  });
+  html += `</div>`;
+  document.getElementById('view-tasks').innerHTML = html;
+}
+function setTaskScope(s){ taskScope=s; renderTasks(); }
+
+function openTaskModal(cid, tid){
+  const t = findTask(cid, tid); if(!t) return;
+  const c = cid ? CAMPAIGNS.find(x=>x.id===cid) : null;
+  document.getElementById('tm-title').textContent = 'Task Detail';
+  const owner = c && t.who===c.a ? 'A · Accountable' : 'R · Responsible';
+  document.getElementById('tm-body').innerHTML = `
+    <h3 style="font-size:15px;margin-bottom:4px;">${escapeHtml(t.title)}</h3>
+    <div style="font-size:12px;color:var(--gray-400);margin-bottom:16px;">${c?escapeHtml(c.name):'Recurring Operations'} ${t.phase?'· Phase '+t.phase+' ('+PHASES[t.phase-1].name+')':''}</div>
+    <div class="info-row"><div class="info-label">Owner</div><div class="info-value">${escapeHtml(t.who)} <span class="badge badge-gray">${owner}</span></div></div>
+    <div class="info-row"><div class="info-label">Priority</div><div class="info-value"><span class="badge ${PRIO_BADGE[t.prio]}">${t.prio}</span></div></div>
+    <div class="info-row"><div class="info-label">Due</div><div class="info-value">${fmtDate(t.due)}</div></div>
+    <div class="info-row"><div class="info-label">Status</div><div class="info-value"><span class="badge ${TASK_STATUS_BADGE[t.status]}">${t.status}</span></div></div>
+    ${t.blocker?`<div class="notice-error" style="margin-top:12px;"><strong>Blocker:</strong> ${escapeHtml(t.blocker)}</div>`:''}
+    <div style="display:flex;gap:8px;margin-top:18px;flex-wrap:wrap;">
+      <button class="btn btn-outline btn-sm" onclick="modalSetStatus('${cid}','${tid}','ToDo')">To Do</button>
+      <button class="btn btn-outline btn-sm" onclick="modalSetStatus('${cid}','${tid}','InProgress')">In Progress</button>
+      <button class="btn btn-outline btn-sm" onclick="modalBlock('${cid}','${tid}')">Block…</button>
+      <button class="btn btn-primary btn-sm" onclick="modalSetStatus('${cid}','${tid}','Done')">Mark Done</button>
+    </div>`;
+  document.getElementById('task-modal').classList.add('open');
+}
+function modalSetStatus(cid, tid, s){ setTaskStatus(cid===''?null:cid, tid, s); closeModal('task-modal'); }
+function modalBlock(cid, tid){
+  const reason = prompt('Describe the blocker:');
+  if (reason===null) return;
+  const t = findTask(cid===''?null:cid, tid); if(!t) return;
+  t.status='Blocked'; t.blocker=reason||'Blocked';
+  afterTaskChange(cid===''?null:cid); closeModal('task-modal');
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  ROLLOUT GUIDES
+// ════════════════════════════════════════════════════════════════════════════
+function renderGuides(){
+  let html = `<div class="notice-pink"><strong>Rollout Guide Builder.</strong> Component-based, version-controlled guides with cross-functional approval and one-click multi-channel publish. The biggest admin-time saver for this role.</div>`;
+  html += `<div class="table-wrap"><table><thead><tr><th>Guide</th><th>Campaign</th><th>Version</th><th>Status</th><th>Published To</th><th></th></tr></thead><tbody>`;
+  Object.keys(GUIDES).forEach(gid => {
+    const g = GUIDES[gid]; const c = CAMPAIGNS.find(x=>x.id===g.campaignId);
+    const sb = g.status==='Published'?'badge-green':g.status==='Draft'?'badge-amber':'badge-blue';
+    html += `<tr class="clickable" onclick="showView('guide-detail','${gid}')">
+      <td><div class="td-name">${escapeHtml(g.title)}</div></td>
+      <td>${c?escapeHtml(c.name):''}</td>
+      <td><span class="badge badge-gray">v${g.version}</span></td>
+      <td><span class="badge ${sb}">${g.status}</span></td>
+      <td style="font-size:11px;color:var(--gray-500);">${g.publishedTo.length?g.publishedTo.join(' · '):'<span style="color:var(--gray-400)">Not published</span>'}</td>
+      <td><button class="btn btn-outline btn-sm" onclick="event.stopPropagation();showView('guide-detail','${gid}')">Open</button></td>
+    </tr>`;
+  });
+  html += `</tbody></table></div>`;
+  html += `<div class="section-header"><div class="section-title">Template Library <small>Seeded from high-performing past guides</small></div></div>`;
+  html += `<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">`;
+  [['Golden Girls','Nostalgia + custom spoon GWP'],['Princess Cruises','Sweepstakes mechanic'],['Back to the Future','Nostalgia / movie anniversary'],['Laufey','Music artist · one-day event'],['Toy Story 5','Licensed collab + split launch']].forEach(t=>{
+    html += `<div class="kb-card"><h4>${t[0]}</h4><p>${t[1]}</p><div style="margin-top:10px;"><button class="btn btn-outline btn-sm" onclick="alert('Cloned &quot;${t[0]}&quot; guide structure into a new draft — flavors, GWP, dates, contest rules pre-populated for editing.')">Use as Template</button></div></div>`;
+  });
+  html += `</div>`;
+  document.getElementById('view-guides').innerHTML = html;
+}
+
+function renderGuideDetail(gid){
+  const g = GUIDES[gid]; if(!g) return;
+  const c = CAMPAIGNS.find(x=>x.id===g.campaignId);
+  let html = `<div class="breadcrumb" onclick="showView('guides')">← Rollout Guides</div>`;
+  html += `<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
+    <div><h2 style="font-size:20px;">${escapeHtml(g.title)}</h2>
+    <div style="margin-top:6px;display:flex;gap:8px;align-items:center;">
+      <span class="badge ${g.status==='Published'?'badge-green':g.status==='Draft'?'badge-amber':'badge-blue'}">${g.status}</span>
+      <span class="badge badge-gray">v${g.version}</span>
+      ${c?`<span style="font-size:12px;color:var(--gray-400);">${escapeHtml(c.name)}</span>`:''}
+    </div></div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-outline btn-sm" onclick="addAddendum('${gid}')">+ Addendum</button>
+      <button class="btn btn-primary btn-sm" onclick="publishGuide('${gid}')">${g.status==='Published'?'Re-publish':'Publish'}</button>
+    </div></div>`;
+
+  html += `<div class="detail-grid"><div>`;
+  html += `<div class="card"><div class="card-header"><div class="card-title">Guide Sections — click to edit</div></div><div class="card-body">`;
+  g.sections.forEach((s,i) => {
+    html += `<div class="guide-section">
+      <div class="guide-sec-head" onclick="toggleGuideSec(this)"><div class="guide-sec-title">${escapeHtml(s.title)}</div><span style="color:var(--gray-400);font-size:12px;">edit ▾</span></div>
+      <div class="guide-sec-body"><textarea class="guide-editarea" data-gid="${gid}" data-idx="${i}" onchange="saveGuideSection(this)">${escapeHtml(s.body)}</textarea></div>
+    </div>`;
+  });
+  html += `</div></div>`;
+
+  if (g.addenda.length){
+    html += `<div class="card"><div class="card-header"><div class="card-title">Addenda / Amendments</div></div><div class="card-body"><ul class="timeline">`;
+    g.addenda.forEach(a => html += `<li class="tl-item"><div class="tl-dot tl-dot-amber"></div><div><div class="tl-text"><b>v${a.v}:</b> ${escapeHtml(a.note)}</div><div class="tl-time">${a.date} · pushed to all stores</div></div></li>`);
+    html += `</ul></div></div>`;
+  }
+
+  html += `</div><div>`;
+  // Approval chain
+  html += `<div class="card"><div class="card-header"><div class="card-title">Approval Chain</div></div><div class="card-body">`;
+  g.approvals.forEach(a => {
+    const icon = a.status==='done'?'<div class="approval-icon approval-done">✓</div>':'<div class="approval-icon approval-pending">⏳</div>';
+    html += `<div class="approval-row">${icon}<div><div class="approval-name">${escapeHtml(a.name)}</div><div class="approval-role">${escapeHtml(a.role)}</div></div></div>`;
+  });
+  html += `</div></div>`;
+  // Publish targets
+  html += `<div class="card"><div class="card-header"><div class="card-title">Publish Targets</div></div><div class="card-body">`;
+  ['Franchisee Portal','Email Digest','Print PDF (POP Kit)','Internal KB'].forEach(t=>{
+    const on = g.publishedTo.includes(t);
+    html += `<div class="task-row"><div class="task-check ${on?'done':''}"></div><div class="task-main"><div class="task-title" style="font-size:12.5px;">${t}</div></div></div>`;
+  });
+  html += `</div></div>`;
+  html += `</div></div>`;
+  document.getElementById('view-guide-detail').innerHTML = html;
+}
+function toggleGuideSec(el){ el.nextElementSibling.classList.toggle('open'); }
+function saveGuideSection(el){
+  const g = GUIDES[el.dataset.gid]; g.sections[+el.dataset.idx].body = el.value; persist();
+}
+function publishGuide(gid){
+  const g = GUIDES[gid];
+  g.status='Published'; g.publishedTo=['Franchisee Portal','Email Digest','Print PDF (POP Kit)','Internal KB'];
+  g.approvals.forEach(a=>a.status='done');
+  persist(); renderGuideDetail(gid);
+  alert('Guide v'+g.version+' published to: Franchisee Portal, Email Digest, Print PDF (POP Kit), Internal KB.\n\nPush notification sent to all ~210 stores. Change log visible to franchisees.');
+}
+function addAddendum(gid){
+  const note = prompt('Addendum note (will push to all stores):');
+  if (!note) return;
+  const g = GUIDES[gid]; g.version++;
+  g.addenda.unshift({ v:g.version, note, date:'Jun 18, 2026' });
+  persist(); renderGuideDetail(gid);
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  VENDORS & PRODUCTION
+// ════════════════════════════════════════════════════════════════════════════
+const PO_STATUS_BADGE = { Quoting:'badge-gray', Production:'badge-blue', QC:'badge-amber', Shipped:'badge-purple', Received:'badge-green' };
+function renderVendors(){
+  let html = `<div class="notice-info"><strong>Vendor & Production Command Center.</strong> Highest-volume area for this role. Routine vendor work sits in Loletta's queue; strategic/compliance items escalate to Sam (A).</div>`;
+  let all=[]; CAMPAIGNS.forEach(c=>c.vendors.forEach(v=>all.push(Object.assign({campaign:c.name,campaignId:c.id},v))));
+  const open = all.filter(v=>v.status!=='Received');
+  const totalCommitted = all.reduce((s,v)=>s+v.amount,0);
+
+  html += `<div class="stats-grid">
+    <div class="stat-card stat-pink"><div class="stat-label">Open POs</div><div class="stat-value">${open.length}</div><div class="stat-sub">in production / transit</div></div>
+    <div class="stat-card stat-teal"><div class="stat-label">Committed Spend</div><div class="stat-value">${fmtMoney(Math.round(totalCommitted/1000))}K</div><div class="stat-sub">across all POs</div></div>
+    <div class="stat-card stat-amber"><div class="stat-label">In QC / Shipped</div><div class="stat-value">${all.filter(v=>v.status==='QC'||v.status==='Shipped').length}</div><div class="stat-sub">awaiting receipt</div></div>
+    <div class="stat-card stat-green"><div class="stat-label">Received</div><div class="stat-value">${all.filter(v=>v.status==='Received').length}</div><div class="stat-sub">at DC / stores</div></div>
+  </div>`;
+
+  html += `<div class="section-header"><div class="section-title">Purchase Orders — All Campaigns</div></div>`;
+  html += `<div class="table-wrap"><table><thead><tr><th>Vendor</th><th>PO #</th><th>Campaign</th><th>Amount</th><th>ETA</th><th>Status</th><th>Pipeline</th></tr></thead><tbody>`;
+  all.forEach(v => {
+    html += `<tr class="clickable" onclick="showView('campaign-detail','${v.campaignId}')">
+      <td><div class="td-name">${escapeHtml(v.name)}</div></td>
+      <td><span class="badge badge-gray">${escapeHtml(v.po)}</span></td>
+      <td style="font-size:12px;">${escapeHtml(v.campaign)}</td>
+      <td>${v.amount?fmtMoney(v.amount):'—'}</td>
+      <td>${v.eta}</td>
+      <td><span class="badge ${PO_STATUS_BADGE[v.status]}"><span class="badge-dot"></span>${v.status}</span></td>
+      <td>${poPipeline(v.status)}</td>
+    </tr>`;
+  });
+  html += `</tbody></table></div>`;
+
+  // Vendor scorecard
+  html += `<div class="section-header"><div class="section-title">Vendor Scorecard <small>Auto-calculated from PO history</small></div></div>`;
+  html += `<div class="table-wrap"><table><thead><tr><th>Vendor</th><th>POs</th><th>On-Time</th><th>Compliance</th><th>Rating</th></tr></thead><tbody>`;
+  const scorecard = {
+    'Pacific Mold Co.':['4','100%','Pass','★★★★★'],
+    'PrintWorks':['3','100%','Pass','★★★★★'],
+    'DisplayCraft':['1','100%','Pass','★★★★☆'],
+    'Lux Packaging':['1 (draft)','—','Pending','—'],
+  };
+  Object.keys(scorecard).forEach(n=>{
+    const s=scorecard[n];
+    html += `<tr><td class="td-name">${n}</td><td>${s[0]}</td><td><span class="badge ${s[1]==='100%'?'badge-green':'badge-gray'}">${s[1]}</span></td><td><span class="badge ${s[2]==='Pass'?'badge-green':'badge-gray'}">${s[2]}</span></td><td style="color:var(--amber);">${s[3]}</td></tr>`;
+  });
+  html += `</tbody></table></div>`;
+  document.getElementById('view-vendors').innerHTML = html;
+}
+function poPipeline(status){
+  const stages=['Quoting','Production','QC','Shipped','Received'];
+  const idx=stages.indexOf(status);
+  return `<div style="display:flex;gap:3px;">`+stages.map((s,i)=>`<div style="width:18px;height:5px;border-radius:2px;background:${i<=idx?'var(--teal)':'var(--gray-200)'};"></div>`).join('')+`</div>`;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  RECAPS & LESSONS
+// ════════════════════════════════════════════════════════════════════════════
+function renderRecaps(){
+  const completed = CAMPAIGNS.filter(c=>c.status==='Completed');
+  let html = `<div class="notice-info"><strong>Post-Campaign Review & Lessons Learned.</strong> Closes the data loop — structured, tagged learnings feed Phase 1 ideation across all future campaigns.</div>`;
+
+  // Performance dashboard
+  html += `<div class="section-header"><div class="section-title">Completed Campaign Performance</div></div>`;
+  html += `<div class="table-wrap"><table><thead><tr><th>Campaign</th><th>Type</th><th>Top Metric</th><th>vs Target</th><th>Budget</th><th>Recap</th></tr></thead><tbody>`;
+  completed.forEach(c => {
+    const k = c.kpis[0];
+    html += `<tr class="clickable" onclick="showView('campaign-detail','${c.id}')">
+      <td><div class="td-name">${escapeHtml(c.name)}</div><div class="td-sub">${escapeHtml(c.theme)}</div></td>
+      <td><span class="badge badge-gray">${c.type.replace(/_/g,' ')}</span></td>
+      <td><div class="td-name">${escapeHtml(k.actual)}</div><div class="td-sub">${escapeHtml(k.label)}</div></td>
+      <td><span class="badge badge-green">▲ beat ${escapeHtml(k.target)}</span></td>
+      <td>${fmtMoney(c.budgetActual)} <span style="color:var(--gray-400);font-size:11px;">/ ${fmtMoney(c.budgetAllocated)}</span></td>
+      <td><button class="btn btn-outline btn-sm" onclick="event.stopPropagation();openRecap('${c.id}')">View / Generate</button></td>
+    </tr>`;
+  });
+  html += `</tbody></table></div>`;
+
+  // Lessons learned
+  html += `<div class="section-header"><div class="section-title">Lessons Learned <small>Tagged & searchable across all campaigns</small></div></div>`;
+  completed.forEach(c => {
+    c.lessons.forEach(l => {
+      html += `<div class="card"><div class="card-header"><div class="card-title">${escapeHtml(c.name)}</div><div class="kb-tags">${l.tags.map(t=>`<span class="badge badge-purple">#${t}</span>`).join('')}</div></div><div class="card-body">
+        <div class="lesson-grid" style="margin-bottom:12px;">
+          <div class="lesson-block good"><h5>✓ What Worked</h5>${escapeHtml(l.good)}</div>
+          <div class="lesson-block bad"><h5>✗ What Didn't</h5>${escapeHtml(l.bad)}</div>
+        </div>
+        <div style="font-size:12.5px;color:var(--gray-700);"><strong style="color:var(--pink);">→ Recommendation:</strong> ${escapeHtml(l.rec)}</div>
+      </div></div>`;
+    });
+  });
+  document.getElementById('view-recaps').innerHTML = html;
+}
+function openRecap(id){
+  const c = CAMPAIGNS.find(x=>x.id===id);
+  document.getElementById('gm-title').textContent = c.name + ' — Recap (AI-assisted draft)';
+  let kpiRows = c.kpis.map(k=>`<div class="metric-card"><div class="metric-val up">${escapeHtml(k.actual)}</div><div class="metric-lbl">${escapeHtml(k.label)} · target ${escapeHtml(k.target)}</div></div>`).join('');
+  document.getElementById('gm-body').innerHTML = `
+    <div class="notice-pink">🤖 <strong>AI-assisted recap draft.</strong> Performance summary and slide outline auto-generated from captured metrics. Sam reviews & polishes before partner presentation.</div>
+    <h3 style="font-size:14px;margin-bottom:8px;">Executive Summary</h3>
+    <p style="font-size:13px;line-height:1.6;color:var(--gray-700);margin-bottom:16px;">${escapeHtml(c.name)} (${fmtDate(c.launch)}–${fmtDate(c.end)}) delivered against objectives, with the headline metric of <b>${escapeHtml(c.kpis[0].actual)}</b> beating the ${escapeHtml(c.kpis[0].target)} target. Final spend ${fmtMoney(c.budgetActual)} of ${fmtMoney(c.budgetAllocated)} allocated (${Math.round(c.budgetActual/c.budgetAllocated*100)}% utilization).</p>
+    <h3 style="font-size:14px;margin-bottom:8px;">Performance vs KPIs</h3>
+    <div class="metric-grid" style="margin-bottom:16px;">${kpiRows}</div>
+    <h3 style="font-size:14px;margin-bottom:8px;">Key Learnings</h3>
+    ${c.lessons.map(l=>`<p style="font-size:13px;line-height:1.6;color:var(--gray-700);margin-bottom:8px;"><b>✓</b> ${escapeHtml(l.good)}<br><b style="color:var(--pink);">→</b> ${escapeHtml(l.rec)}</p>`).join('')}
+    <div style="display:flex;gap:8px;margin-top:16px;">
+      <button class="btn btn-primary btn-sm" onclick="alert('Recap deck exported. Partner-specific ROI version generated for ${escapeHtml(c.licensor||'partner')}.')">Export Deck</button>
+      <button class="btn btn-outline btn-sm" onclick="alert('Archived. Lessons contributed to Knowledge Base and tagged for Phase 1 ideation retrieval.')">Archive + Contribute to KB</button>
+    </div>`;
+  document.getElementById('generic-modal').classList.add('open');
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  RACI & HANDOFF
+// ════════════════════════════════════════════════════════════════════════════
+function renderRaci(){
+  const RACI = [
+    ['Campaign Concept Approval','Loletta (R); Sr. Mkt Mgr + Execs (A)','Loletta (R); Sam (A)'],
+    ['External Partnership Negotiation','Loletta (R); Sr/Execs (A)','Sam (R/A); CFO on final contracts'],
+    ['Final Creative & Asset Sign-off','Design/Loletta (R); Sr. Mkt Mgr (A)','Design/Loletta (R); Sam (A)'],
+    ['Rollout Guide Approval & Distribution','Loletta (R); Sr. Mkt Mgr (A)','Loletta (R); Sam (A)'],
+    ['Franchisee Communications','Loletta/Melissa (R); Sr (A)','Loletta/Melissa (R); Sam (A)'],
+    ['Vendor Liaison (Strategic/Compliance)','Loletta (R routine); Exec for major','Loletta (R routine); Sam (A strategic)'],
+    ['Budget, Invoicing & Dept P&L','Loletta (R); CFO (A)','Loletta (R); Sam (A review/present)'],
+    ['Overall Campaign Accountability','Sr. Mkt Mgr / Execs','Sam Kwon'],
+  ];
+  let html = `<div class="notice-info"><strong>Leadership Transition (Sep–Nov 2025).</strong> Brittany Knollmiller (Sr. Marketing Manager) → Sam Kwon (Head of Marketing). RACI shifted gradually with full audit history. Portal supports temporary/historical RACI overrides with effective dates.</div>`;
+
+  // Handoff timeline
+  html += `<div class="card"><div class="card-header"><div class="card-title">Handoff Timeline</div></div><div class="card-body"><ul class="timeline">
+    <li class="tl-item"><div class="tl-dot tl-dot-gray"></div><div><div class="tl-text"><b>Pre-Oct 2025:</b> Loletta = primary executor (R); Sr. Marketing Manager held strategic accountability (A).</div><div class="tl-time">Through Sep 2025</div></div></li>
+    <li class="tl-item"><div class="tl-dot tl-dot-amber"></div><div><div class="tl-text"><b>Sep–Nov 2025:</b> Collaborative handoff. Sam reviewed initiatives side-by-side with Loletta (e.g., keychain distribution strategy).</div><div class="tl-time">Sep–Nov 2025</div></div></li>
+    <li class="tl-item"><div class="tl-dot tl-dot-teal"></div><div><div class="tl-text"><b>By Nov 2025:</b> Sam = primary Accountable (A); Loletta = Responsible (R). CFO/CEO only on major budget/brand.</div><div class="tl-time">Nov 2025</div></div></li>
+    <li class="tl-item"><div class="tl-dot tl-dot-pink"></div><div><div class="tl-text"><b>Current:</b> Sam is the face of marketing in PR, exec meetings, franchisee comms & partner recaps. Loletta leads flawless execution.</div><div class="tl-time">Present</div></div></li>
+  </ul></div></div>`;
+
+  html += `<div class="section-header"><div class="section-title">RACI Matrix — Pre vs Post Transition</div></div>`;
+  html += `<div class="table-wrap"><table><thead><tr><th>Responsibility Area</th><th>Pre-Oct 2025 (R / A)</th><th>Post-Oct 2025 (R / A)</th></tr></thead><tbody>`;
+  RACI.forEach(r => html += `<tr><td class="td-name">${r[0]}</td><td style="font-size:12px;color:var(--gray-600);">${r[1]}</td><td style="font-size:12px;color:var(--gray-800);font-weight:600;">${r[2]}</td></tr>`);
+  html += `</tbody></table></div>`;
+  document.getElementById('view-raci').innerHTML = html;
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+//  KNOWLEDGE BASE
+// ════════════════════════════════════════════════════════════════════════════
+function renderKB(){
+  let html = `<div class="search-box"><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg><input type="text" id="kb-search" placeholder="Search campaigns, guides, lessons, SOPs… (e.g. nostalgia, spoon, sweepstakes, disney)" oninput="renderKBResults()"></div>`;
+  html += `<div id="kb-results"></div>`;
+  document.getElementById('view-kb').innerHTML = html;
+  renderKBResults();
+}
+function buildKBItems(){
+  let items=[];
+  CAMPAIGNS.forEach(c=>{
+    items.push({type:'Campaign', title:c.name, text:c.objective+' '+c.theme+' '+c.flavors.join(' ')+' '+c.gwp.join(' '), tags:[c.type.replace(/_/g,'-'),c.licensor||'internal'], action:()=>showView('campaign-detail',c.id)});
+    c.lessons.forEach(l=>items.push({type:'Lesson', title:c.name+' — Lesson', text:l.good+' '+l.bad+' '+l.rec+' '+l.tags.join(' '), tags:l.tags, action:()=>showView('recaps')}));
+  });
+  Object.keys(GUIDES).forEach(gid=>{ const g=GUIDES[gid]; items.push({type:'Rollout Guide', title:g.title, text:g.sections.map(s=>s.body).join(' '), tags:[g.status], action:()=>showView('guide-detail',gid)}); });
+  [['SOP: Rollout Guide Creation & Field Communication','Drafting → cross-functional review → Sam sign-off → multi-channel publish (Weekly Swirl, Marketing Insider, FBC calls, portal).','sop,communication,rollout-guide'],
+   ['SOP: Vendor Coordination & Budgeting','Tiered — routine vendor work in Loletta queue; strategic negotiations & Disney-level compliance escalate to Sam. Invoice coding → review → Finance.','sop,vendor,budget,compliance'],
+   ['SOP: Franchisee Support & LSM','New store marketing kits, ad-hoc LSM requests, weekly FBC calls, AI LSM chatbot (target 80% self-service).','sop,lsm,franchisee']
+  ].forEach(s=>items.push({type:'SOP', title:s[0], text:s[1], tags:s[2].split(','), action:()=>{}}));
+  return items;
+}
+function renderKBResults(){
+  const q = (document.getElementById('kb-search')?.value||'').toLowerCase().trim();
+  let items = buildKBItems();
+  if (q) items = items.filter(i => (i.title+' '+i.text+' '+i.tags.join(' ')).toLowerCase().includes(q));
+  const cont = document.getElementById('kb-results');
+  if (!items.length){ cont.innerHTML = `<div class="empty">No results for "${escapeHtml(q)}".</div>`; return; }
+  const typeBadge = {Campaign:'badge-pink',Lesson:'badge-purple','Rollout Guide':'badge-blue',SOP:'badge-teal'};
+  cont.innerHTML = items.map((i,idx)=>`<div class="kb-card" style="cursor:pointer;" onclick="kbAction(${idx})">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;"><h4>${escapeHtml(i.title)}</h4><span class="badge ${typeBadge[i.type]}">${i.type}</span></div>
+    <p>${escapeHtml(i.text.slice(0,160))}${i.text.length>160?'…':''}</p>
+    <div class="kb-tags">${i.tags.map(t=>`<span class="badge badge-gray">#${escapeHtml(t)}</span>`).join('')}</div>
+  </div>`).join('');
+  window._kbItems = items;
+}
+function kbAction(idx){ if (window._kbItems && window._kbItems[idx]) window._kbItems[idx].action(); }
+
+// ════════════════════════════════════════════════════════════════════════════
+//  NEW / CLONE CAMPAIGN
+// ════════════════════════════════════════════════════════════════════════════
+function campaignForm(prefill){
+  const types = ['Licensed_Collab','Internal_Seasonal','Anniversary','Test_Innovation','Filler_LTO'];
+  return `
+    <div class="form-group"><label class="form-label">Campaign Name <span>*</span></label><input class="form-control" id="f-name" value="${prefill?escapeHtml(prefill.name+' (Copy)'):''}"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Type</label><select class="form-control" id="f-type">${types.map(t=>`<option ${prefill&&prefill.type===t?'selected':''}>${t}</option>`).join('')}</select></div>
+      <div class="form-group"><label class="form-label">Licensor (optional)</label><input class="form-control" id="f-licensor" value="${prefill&&prefill.licensor?escapeHtml(prefill.licensor):''}"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Theme</label><input class="form-control" id="f-theme" value="${prefill?escapeHtml(prefill.theme):''}"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Launch Date</label><input type="date" class="form-control" id="f-launch" value="${prefill?prefill.launch:''}"></div>
+      <div class="form-group"><label class="form-label">Budget ($)</label><input type="number" class="form-control" id="f-budget" value="${prefill?prefill.budgetAllocated:''}"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Objective</label><textarea class="form-control" id="f-objective">${prefill?escapeHtml(prefill.objective):''}</textarea></div>
+    <div class="form-group"><label class="form-label">Flavors (comma-separated)</label><input class="form-control" id="f-flavors" value="${prefill?escapeHtml(prefill.flavors.join(', ')):''}"></div>
+    ${prefill?`<div class="notice-pink" style="margin-bottom:0;">🧬 <strong>Clone & Adapt:</strong> Phase 1 task checklist, RACI (R: Loletta, A: Sam), and product structure pre-populated from <b>${escapeHtml(prefill.name)}</b>.</div>`:''}
+  `;
+}
+let _cloneSource = null;
+function openNewCampaignModal(){
+  _cloneSource = null;
+  document.getElementById('cm-title').textContent = 'New Campaign';
+  document.getElementById('cm-body').innerHTML = campaignForm(null);
+  document.getElementById('campaign-modal').classList.add('open');
+}
+function openCloneModal(id){
+  let src = id ? CAMPAIGNS.find(c=>c.id===id) : CAMPAIGNS.find(c=>c.status==='Completed');
+  if (!id){
+    // pick best-performing completed as default
+    src = CAMPAIGNS.find(c=>c.id==='goldengirls');
+  }
+  _cloneSource = src;
+  document.getElementById('cm-title').textContent = 'Clone & Adapt — ' + src.name;
+  document.getElementById('cm-body').innerHTML = campaignForm(src);
+  document.getElementById('campaign-modal').classList.add('open');
+}
+function submitCampaign(){
+  const name = document.getElementById('f-name').value.trim();
+  if (!name){ alert('Campaign name is required.'); return; }
+  const launch = document.getElementById('f-launch').value;
+  const id = 'c'+Date.now();
+  const flavors = document.getElementById('f-flavors').value.split(',').map(s=>s.trim()).filter(Boolean);
+  const phase1Tasks = [
+    T('Review historical performance & competitive scan',1,'ToDo','Medium','Loletta Dao',''),
+    T('Draft concept brief (flavors, GWP, ROI estimate)',1,'ToDo','High','Loletta Dao',''),
+    T('Submit concept for Sam approval',1,'ToDo','High','Loletta Dao',''),
+    T('Concept approval — Sam sign-off',1,'ToDo','High','Sam Kwon',''),
+  ];
+  const c = {
+    id, name, type:document.getElementById('f-type').value, status:'Ideation', phase:1,
+    licensor:document.getElementById('f-licensor').value.trim()||null,
+    theme:document.getElementById('f-theme').value.trim()||'—',
+    start:new Date().toISOString().split('T')[0], launch, end:launch,
+    objective:document.getElementById('f-objective').value.trim()||'—',
+    r:'Loletta Dao', a:'Sam Kwon',
+    budgetAllocated:+document.getElementById('f-budget').value||0, budgetActual:0,
+    flavors, toppings:_cloneSource?[..._cloneSource.toppings]:[], gwp:_cloneSource?[..._cloneSource.gwp]:[],
+    kpis:_cloneSource?_cloneSource.kpis.map(k=>({label:k.label,target:k.target,actual:'—'})):[{label:'Sales Lift',target:'—',actual:'—'}],
+    tasks:phase1Tasks, issues:[], vendors:[], guideId:null, lessons:[],
+    log:[{ dot:'pink', text:_cloneSource?`<b>Campaign created</b> — cloned from ${escapeHtml(_cloneSource.name)}.`:'<b>Campaign created.</b>', time:'Jun 18, 2026' }],
+  };
+  CAMPAIGNS.unshift(c);
+  closeModal('campaign-modal'); updateBadges(); persist();
+  showView('campaign-detail', id);
+}
+
+function openAddTaskModal(cid){
+  const title = prompt('New task title:');
+  if (!title) return;
+  const c = CAMPAIGNS.find(x=>x.id===cid);
+  c.tasks.push(T(title, c.phase, 'ToDo', 'Medium', 'Loletta Dao', ''));
+  persist(); renderCampaignDetail(cid);
+}
+
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(o => o.addEventListener('click', e => { if (e.target===o) o.classList.remove('open'); }));
+
+// ════════════════════════════════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════════════════════════════════
+restore();
+setRole(ROLE);
+updateBadges();
+renderDashboard();
+</script>
+</body>
+</html>
